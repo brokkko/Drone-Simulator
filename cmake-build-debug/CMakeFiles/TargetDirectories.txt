@@ -1,0 +1,3 @@
+C:/Users/Оля/CLionProjects/Drones2D/cmake-build-debug/CMakeFiles/edit_cache.dir
+C:/Users/Оля/CLionProjects/Drones2D/cmake-build-debug/CMakeFiles/Drones2D.dir
+C:/Users/Оля/CLionProjects/Drones2D/cmake-build-debug/CMakeFiles/rebuild_cache.dir

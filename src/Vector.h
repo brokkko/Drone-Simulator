@@ -7,11 +7,9 @@ public:
     double y;
     double z;
 
-    Vector(double x, double y, double z){
-        this->x = x;
-        this->y = y;
-        this->z = z;
-    }
+    Vector(double x, double y, double z): x{x}, y{y}, z{z} {};
+
+    Vector() : x{0}, y{0}, z{0} {};
 
     Vector operator+(Vector r) const;
     Vector operator-(Vector r) const;

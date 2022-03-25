@@ -3,7 +3,7 @@ project(Drones2D)
 
 set(CMAKE_CXX_STANDARD 20)
 
-add_executable(Drones2D main.cpp src/Drone.cpp src/Drone.h src/Vector.cpp src/Vector.h)
+add_executable(Drones2D main.cpp src/Drone.cpp src/Drone.h src/Vector.cpp src/Vector.h src/DronePhysics.cpp src/DronePhysics.h src/State.cpp)
 
 include_directories(headers /usr/include c:/SFML/include)
 

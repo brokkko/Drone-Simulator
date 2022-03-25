@@ -1,21 +1,28 @@
 #ifndef DRONES2D_DRONE_H
 #define DRONES2D_DRONE_H
 
-
+#include <iostream>
+#include "list"
 #include "Vector.h"
+
+
 
 class Drone {
 public:
-    Vector velocity;
-    Vector position;
-    double mass;
-public:
-    Drone();
-    Drone F(Drone drone, double t);
-    Drone rungeKutta(Drone drone, double h, double dt);
+    struct State{
+        Vector velocity;
+        Vector position;
 
-    friend Drone operator +(Drone a, Drone b);
-    friend Drone operator *(double a, Drone b);
+        friend State operator +(State &a, State &b);
+        friend State operator *(double &a, State &b);
+    };
+
+    State state;
+    std::list<Drone> neighbors;
+
+public:
+    Drone(Vector position, Vector velocity);
+
 };
 
 

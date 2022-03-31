@@ -17,6 +17,10 @@ public:
     Vector operator/(Vector r) const;
     Vector operator*(double r) const;
     Vector operator/(double r) const;
+
+    double length();
+    [[nodiscard]] double distanceTo(Vector d2) const;
+    Vector rotate(double angle);
     // friend Vector operator*(double l, Vector r);
 };
 

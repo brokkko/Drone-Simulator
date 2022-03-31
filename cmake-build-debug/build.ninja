@@ -81,6 +81,20 @@ build CMakeFiles/Drones2D.dir/src/Vector.cpp.obj: CXX_COMPILER__Drones2D_Debug C
   OBJECT_DIR = CMakeFiles\Drones2D.dir
   OBJECT_FILE_DIR = CMakeFiles\Drones2D.dir\src
 
+build CMakeFiles/Drones2D.dir/src/DronePhysics.cpp.obj: CXX_COMPILER__Drones2D_Debug C$:/Users/Îëÿ/CLionProjects/Drones2D/src/DronePhysics.cpp || cmake_object_order_depends_target_Drones2D
+  DEP_FILE = CMakeFiles\Drones2D.dir\src\DronePhysics.cpp.obj.d
+  FLAGS = -g -std=gnu++1z
+  INCLUDES = -IC:/Users/Îëÿ/CLionProjects/Drones2D/headers -I/usr/include -Ic:/SFML/include -IC:/SFML/include
+  OBJECT_DIR = CMakeFiles\Drones2D.dir
+  OBJECT_FILE_DIR = CMakeFiles\Drones2D.dir\src
+
+build CMakeFiles/Drones2D.dir/src/State.cpp.obj: CXX_COMPILER__Drones2D_Debug C$:/Users/Îëÿ/CLionProjects/Drones2D/src/State.cpp || cmake_object_order_depends_target_Drones2D
+  DEP_FILE = CMakeFiles\Drones2D.dir\src\State.cpp.obj.d
+  FLAGS = -g -std=gnu++1z
+  INCLUDES = -IC:/Users/Îëÿ/CLionProjects/Drones2D/headers -I/usr/include -Ic:/SFML/include -IC:/SFML/include
+  OBJECT_DIR = CMakeFiles\Drones2D.dir
+  OBJECT_FILE_DIR = CMakeFiles\Drones2D.dir\src
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Drones2D
@@ -89,7 +103,7 @@ build CMakeFiles/Drones2D.dir/src/Vector.cpp.obj: CXX_COMPILER__Drones2D_Debug C
 #############################################
 # Link the executable Drones2D.exe
 
-build Drones2D.exe: CXX_EXECUTABLE_LINKER__Drones2D_Debug CMakeFiles/Drones2D.dir/main.cpp.obj CMakeFiles/Drones2D.dir/src/Drone.cpp.obj CMakeFiles/Drones2D.dir/src/Vector.cpp.obj | C$:/SFML/lib/libsfml-system-d.a C$:/SFML/lib/libsfml-window-d.a C$:/SFML/lib/libsfml-graphics-d.a C$:/SFML/lib/libsfml-network-d.a C$:/SFML/lib/libsfml-audio-d.a
+build Drones2D.exe: CXX_EXECUTABLE_LINKER__Drones2D_Debug CMakeFiles/Drones2D.dir/main.cpp.obj CMakeFiles/Drones2D.dir/src/Drone.cpp.obj CMakeFiles/Drones2D.dir/src/Vector.cpp.obj CMakeFiles/Drones2D.dir/src/DronePhysics.cpp.obj CMakeFiles/Drones2D.dir/src/State.cpp.obj | C$:/SFML/lib/libsfml-system-d.a C$:/SFML/lib/libsfml-window-d.a C$:/SFML/lib/libsfml-graphics-d.a C$:/SFML/lib/libsfml-network-d.a C$:/SFML/lib/libsfml-audio-d.a
   FLAGS = -g
   LINK_LIBRARIES = C:/SFML/lib/libsfml-system-d.a  C:/SFML/lib/libsfml-window-d.a  C:/SFML/lib/libsfml-graphics-d.a  C:/SFML/lib/libsfml-network-d.a  C:/SFML/lib/libsfml-audio-d.a  -lkernel32 -luser32 -lgdi32 -lwinspool -lshell32 -lole32 -loleaut32 -luuid -lcomdlg32 -ladvapi32
   OBJECT_DIR = CMakeFiles\Drones2D.dir

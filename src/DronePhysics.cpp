@@ -2,7 +2,7 @@
 #include "cmath"
 
 double DronePhysics::DegreesToRadians(double degrees) {
-    return ( degrees * M_PI) / 180 ;;
+    return ( degrees * M_PI) / 180 ;
 }
 
 Drone::State DronePhysics::Fdt(Drone &drone, double h) {

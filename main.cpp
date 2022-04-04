@@ -8,8 +8,9 @@
 void addNeighbors(std::vector<Drone> drones){
     for(auto &drone1: drones){
         for(auto &drone2: drones){
-            drone1.neighbors.push_back(drone2);
-            drone2.neighbors.push_back(drone1);
+            if(drone1 != drone2){
+                drone1.neighbors.push_back(drone2);
+            }
         }
     }
 }
@@ -24,6 +25,9 @@ int main()
     std::vector<Drone> drones;
     double radius = 100; // радиус между дронами
     std::vector<sf::CircleShape> circles;
+
+//    std::cout << drones[0].neighbors.size() << std::endl;
+//    std::cout << drones[0].neighbors.at(0).state.position.x << std::endl;
 
     for(int i=0; i<5; i++){
         Drone drone = { {10,10 + i*70.0,0}, {1,0,0}, {1000, 50, 0}};
@@ -46,6 +50,8 @@ int main()
 
     }
 
+    addNeighbors(drones);
+
     double h = 0.05;
 
     while (window.isOpen())
@@ -58,8 +64,6 @@ int main()
         }
 
         window.clear();
-
-        addNeighbors(drones);
 
         for(int i=0; i<drones.size(); i++){
             drones[i] = physics.rungeKutta(drones[i], h);

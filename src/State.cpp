@@ -13,3 +13,13 @@ Drone::State operator*(double a, Drone::State b) {
     c.velocity = b.velocity * a;
     return c;
 }
+
+bool operator==(Drone &first, Drone &second) {
+    return &first == &second;
+}
+
+bool operator!=(Drone &first, Drone &second) {
+    return &first != &second;
+}
+
+

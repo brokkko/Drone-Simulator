@@ -27,22 +27,34 @@ class Vector:
     def __mul__(self, other):
         if isinstance(other, Vector):
             return Vector(self.x * other.x, self.y * other.y, self.z * other.z)
-        elif isinstance(other, float):
+        elif isinstance(other, float) or isinstance(other, int):
             return Vector(self.x * other, self.y * other, self.z * other)
+
+    def __rmul__(self, other):
+        if isinstance(other, Vector):
+            return Vector(self.x * other.x, self.y * other.y, self.z * other.z)
+        elif isinstance(other, float) or isinstance(other, int):
+            return Vector(self.x * other, self.y * other, self.z * other)
+
+    def __truediv__(self, other):
+        if isinstance(other, Vector):
+            return Vector(self.x / other.x, self.y / other.y, self.z / other.z)
+        elif isinstance(other, float) or isinstance(other, int):
+            return Vector(self.x / other, self.y / other, self.z / other)
 
     def get_xyz(self):
         return self.x, self.y, self.z
 
-    def get_xy(self):
-        return self.x, self.y
+    def get_xy(self) -> (int, int):
+        return int(self.x), int(self.y)
 
     def copy(self):
         return Vector(*self.get_xyz())
 
-    def length(self):
+    def length(self) -> float:
         return math.sqrt(self.x * self.x + self.y * self.y + self.z * self.z)
 
-    def distance_to(self, vector):
+    def distance_to(self, vector) -> float:
         return math.sqrt((self.x - vector.x) * (self.x - vector.x)
                          + (self.y - vector.y) * (self.y - vector.y)
                          + (self.z - vector.z) * (self.z - vector.z))

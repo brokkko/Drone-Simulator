@@ -10,6 +10,7 @@ class Drone:
         self.neighbors = []
         self.id = id
         self.quality = None
+        self.safe_radius = 40
 
     def __eq__(self, other):
         if other.target is None or other.state is None or other.neighbors is None:

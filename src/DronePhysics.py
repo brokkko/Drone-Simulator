@@ -1,6 +1,6 @@
 import math
 from typing import Type
-import pygame
+
 
 from Drone import Drone
 from Vector import Vector
@@ -8,10 +8,6 @@ from State import State
 
 
 class DronePhysics:
-
-    def __init__(self, screen=None, font=None):
-        self.screen = screen
-        self.font = font
 
     def construct_velocity_vector(self, drone: Drone) -> Vector:
         if (drone.state.velocity.x == 0 and drone.state.velocity.y == 0 and drone.state.velocity.z == 0) or \
@@ -95,32 +91,20 @@ class DronePhysics:
         angle = math.radians(25)
 
         v: Vector = Vector(drone.state.velocity.x, drone.state.velocity.y, drone.state.velocity.z)
-        v.rotate_z(-4 * angle)
+        v.rotate_z(-8 * angle)
 
         pBest = Vector(0, 0, 0)
         best = 0
-        # print("_-__________________")
-        for i in range(1, 10):
+
+        for i in range(1, 19):
             current = self.quality(drone, v.rotate_z(angle), h)
 
-            # ----DEBUG
-            if self.screen:
-                v_end = drone.state.position + v * 100
 
-                # pygame.draw.aaline(self.screen, (0, 0, 0), drone.state.position.get_xy(),
-                #                    (drone.state.position + v * 100).get_xy())
-                # print(v_end.get_xy())
-                # self.font.render_to(self.screen, v_end.get_xy(), f"{round(current)}", (0, 0, 0))
-            # ----DEBUG
-
-            # print(f'hereeee -------------{v}')
-            # print(current)
             if current > best:
                 best = current
                 pBest = Vector(v.x, v.y, v.z)
-        # if best == 0 and pBest == Vector(0, 0, 0):
 
-        drone.quality = round(best, 3)
+
         return pBest
 
     def Fdt(self, drone: Drone, h: float) -> State:
@@ -129,16 +113,6 @@ class DronePhysics:
         dX.velocity = self.construct_velocity_vector(drone)  # - drone.state.velocity
         dX.position = dX.velocity
         # dX.position = self.pathDefinition(drone, h)
-
-        # pygame.draw.circle(self.screen, (200, 200, 200, 0), drone.state.position.get_xy(), drone.safe_radius)
-
-        # v: Vector = dX.position.copy()
-        # v_end: Vector = v*10
-        #
-        # pygame.draw.aaline(self.screen, (0, 0, 0), drone.state.position.get_xy(), (drone.state.position + v_end).get_xy())
-
-        # if drone.id == 4:
-        #     print(dX.position)
 
         return dX
 

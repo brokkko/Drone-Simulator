@@ -1,25 +1,27 @@
 import './App.css';
-import * as THREE from 'three';
+import Scene from './Scene'
+import {useEffect, useState} from "react";
 
 function App() {
 
 
   let socket
-  let connect = (e) =>{
-    socket = new WebSocket("ws://127.0.0.1:8765");
 
-    socket.onopen = function(e) {
-      alert("[open] Соединение установлено");
-    };
-    socket.onmessage = function(event) {
-      console.log(`[message] Данные получены с сервера: ${event.data}`);
-    };
-  }
+  const [state, setState] = useState('no')
+
+
+  socket = new WebSocket("ws://127.0.0.1:8765");
+
+  socket.onopen = function(e) {
+    setState('connected')
+  };
+
 
 
   return (
     <div className="App">
-    <button onClick={connect}></button>
+      <Scene Socket = {socket}/>
+      <h1>{state}</h1>
     </div>
   );
 }

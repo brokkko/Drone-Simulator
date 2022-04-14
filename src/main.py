@@ -1,34 +1,50 @@
-from Vector import Vector
 import asyncio
 import websockets
+from Drone import Drone
+from Vector import Vector
+from DronePhysics import DronePhysics
 
 
-async def hello(websocket, path):
-    # name = await websocket.recv()
-    # print("< {}".format(name))
-    positions = Vector(200, 300, 7)
-    # greeting = "Hello {}!".format(name)
-    n = 10
-    while n != 0:
-        await websocket.send(f'{positions.get_xyz()}')
-        positions.x += 10
-        positions.y += 10
-        positions.z += 10
-        n -= 1
-    # print("> {}".format(greeting))
+def addNeighbors(drones):
+    for drone1 in drones:
+        for drone2 in drones:
+            if drone1 != drone2:
+                drone1.neighbors.append(drone2)
 
-start_server = websockets.serve(hello, 'localhost', 8765)
+
+def init():
+    drones = []
+    for index in range(1, 7):
+        drones.append(Drone(Vector(10, 50 * index, 0), Vector(7, 0, 0), Vector(500, 50 * index, 0), index))
+
+    drones.append(Drone(Vector(250, 50 * 2, 0), Vector(0, 0, 0), Vector(500, 50 * 7, 0), 7))
+    drones.append(Drone(Vector(220, 50 * 1, 0), Vector(0, 0, 0), Vector(500, 50 * 8, 0), 8))
+    # drones.append(Drone(Vector(250, 50 * 2 + 17, 0), Vector(0, 0, 0), Vector(500, 50 * 9, 0), 9))
+    # drones.append(Drone(Vector(250, 50 * 2 + 17 * 2, 0), Vector(0, 0, 0), Vector(500, 50 * 9, 0), 9))
+    # drones.append(Drone(Vector(250, 50 * 2 + 17 * 3, 0), Vector(0, 0, 0), Vector(500, 50 * 9, 0), 9))
+
+    return drones
+
+
+async def main(websocket, path):
+
+    droneList = init()
+    addNeighbors(droneList)
+    physics = DronePhysics()
+    h = 0.015
+
+    while True:
+        for index in range(len(droneList)):
+            physics.rungeKutta(droneList[index], h)
+
+        str_to_send = []
+        for i in droneList:
+            str_to_send.append(f'{i.state.position.x} {i.state.position.z} {i.state.position.y}')
+        str_to_send = '|'.join(str_to_send)
+
+        await websocket.send(str_to_send)
+
+start_server = websockets.serve(main, 'localhost', 8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
-
-
-
-# if __name__ == "__main__":
-#     sio = socketio.Server()
-#     positions = Vector(200, 300, 7)
-#     while True:
-#         sio.emit('data', {'x': 200,
-#                           'y': 300,
-#                           'z': 7})
-#         time.sleep(5)

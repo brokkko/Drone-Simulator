@@ -1,7 +1,4 @@
 import math
-from typing import Type
-
-
 from Drone import Drone
 from Vector import Vector
 from State import State
@@ -16,7 +13,6 @@ class DronePhysics:
         k1 = 5.0
         k2 = 1.0
         k3 = 2.0
-        #radius = 40
         V_goal: Vector = k1 * (drone.target - drone.state.position) / (drone.target - drone.state.position).length()
         # вектор отталкивания
         V_close: Vector = Vector(0, 0, 0)
@@ -119,8 +115,4 @@ class DronePhysics:
     def rungeKutta(self, drone: Drone, h: float):
         xdt = self.Fdt(drone, h)
         drone.state = drone.state + (h * xdt)
-        # print(drone.state)
-
-
-
         return drone

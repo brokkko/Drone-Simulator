@@ -1,14 +1,6 @@
 from Vector import Vector
 from typing import Optional
 
-# struct State{
-# Vector velocity;
-# Vector position;
-#
-# friend State operator +(State a, State b);
-# friend State operator *(double a, State b);
-# };
-
 
 class State:
     def __init__(self, velocity:  Optional[Vector] = None, position: Optional[Vector] = None):

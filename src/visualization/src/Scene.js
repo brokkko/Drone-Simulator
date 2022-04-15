@@ -14,7 +14,7 @@ class Scene extends Component {
         this.socket.onmessage = this.socketOnMessage
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls.enableDamping = true
-        this.controls.maxPolarAngle = 1.2
+        this.controls.maxPolarAngle = Math.PI/2
         this.controls.minPolarAngle = 0
         this.controls.update()
 

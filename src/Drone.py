@@ -4,13 +4,14 @@ from State import State
 
 class Drone:
 
-    def __init__(self, position: Vector, velocity: Vector, target: Vector, id: int):
+    def __init__(self, position: Vector, velocity: Vector, target: Vector, id: int, connected: bool):
         self.target = target
         self.state = State(velocity, position)
         self.neighbors = []
         self.id = id
         self.quality = None
         self.safe_radius = 40
+        self.connected = connected
 
     def __eq__(self, other):
         if other.target is None or other.state is None or other.neighbors is None:

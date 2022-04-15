@@ -13,6 +13,13 @@ class Drone extends THREE.Mesh{
         super(geometry, material)
         this.position.copy(pos)
 
+        this.colorDisconnected = 0x4D4D4D
+        this.colorConnected = 0x00ff00;
+
+    }
+
+    setColor = (status) => {
+        +status ? this.material.color.setHex(this.colorConnected) : this.material.color.setHex(this.colorDisconnected)
     }
 
 }

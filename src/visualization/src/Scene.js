@@ -20,8 +20,6 @@ class Scene extends Component {
 
         this.dronesRenderer = new DronesRenderer(this.scene)
 
-        this.counter = 0
-
         this.startAnimation()
 
     }
@@ -29,7 +27,6 @@ class Scene extends Component {
     socketOnMessage = (event) =>{
         let positions = parseData(event.data)
         this.dronesRenderer.updatePositions(positions)
-        console.log(0);
     }
 
     startAnimation = () =>{
@@ -47,6 +44,9 @@ class Scene extends Component {
             // chair.animate()
             renderer.render( scene, camera );
             controls.update()
+
+
+
             window.requestAnimationFrame(tick)
 
         }
@@ -75,7 +75,7 @@ class Scene extends Component {
     }
 
     addPlain = () =>{
-        const geometry = new THREE.PlaneGeometry( 50, 50 );
+        const geometry = new THREE.PlaneGeometry( 100, 100 );
         const material = new THREE.MeshStandardMaterial( {color: 0xffffff, side: THREE.DoubleSide} );
         const plane = new THREE.Mesh( geometry, material );
         plane.position.set(10,-1,10)
@@ -93,7 +93,7 @@ class Scene extends Component {
             height: window.innerHeight
         }
         //Camera
-        this.camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 100)
+        this.camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000)
         this.camera.position.x = 50
         this.camera.position.y = 10
         this.camera.position.z = 0

@@ -95,11 +95,9 @@ class DronePhysics:
         for i in range(1, 19):
             current = self.quality(drone, v.rotate_z(angle), h)
 
-
             if current > best:
                 best = current
                 pBest = Vector(v.x, v.y, v.z)
-
 
         return pBest
 

@@ -9,7 +9,8 @@ class DronesRenderer{
 
     fillDronesList(positions){
         for (let index in positions){
-            this.drones.push(new Drone(positions[index]));
+            this.drones.push(new Drone(positions[index].pos));
+            this.drones[index].setColor(positions[index].connected);
             this.scene.add(this.drones[index])
         }
     }
@@ -18,16 +19,17 @@ class DronesRenderer{
     updatePositions(coordinates){
 
         for (let i of coordinates){
-            i.multiplyScalar(1/10)
+            i.pos.multiplyScalar(1/10)
         }
 
-        if(this.drones.length === 0){
+        if(this.drones.length === 0){ // if no drones created yet
             this.fillDronesList(coordinates);
             return;
         }
 
-        for(let index in coordinates){
-            this.drones[index].position.copy(coordinates[index])
+        for(let index in coordinates){ // update
+            this.drones[index].position.copy(coordinates[index].pos)
+            this.drones[index].setColor(coordinates[index].connected);
         }
 
     }

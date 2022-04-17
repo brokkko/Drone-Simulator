@@ -1745,7 +1745,7 @@ class Hub:
                 self.mutex.release()
 
                 loadedFromCache = False
-                print(f'cache is ----{self.cache}')
+
                 if self.cache is not None:
                     try:
                         cachedDescriptionName = os.path.join(self.cache, self.components[i].uid() + '.json')

@@ -5,7 +5,7 @@
     <envs>
       <env name="PYTHONUNBUFFERED" value="1" />
     </envs>
-    <option name="SDK_HOME" value="E:\python376\python.exe" />
+    <option name="SDK_HOME" value="E:\python38\python.exe" />
     <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/connector" />
     <option name="IS_MODULE_SDK" value="false" />
     <option name="ADD_CONTENT_ROOTS" value="true" />

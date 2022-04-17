@@ -5,9 +5,9 @@ from pynput import keyboard
 
 
 args = argparse.ArgumentParser()
-args.add_argument('--address', dest='address', help='server address and port X.X.X.X:X', default='127.0.0.1:57891')
+args.add_argument('--address', dest='address', help='server address and port X.X.X.X:X', default='127.0.0.1:8000')
 args.add_argument('--modem', dest='modem', help='modem socket', default='1:2')
-args.add_argument('--cache', dest='cache', help='component cache directory', default='/cache') # TODO: path to root from autopilot
+args.add_argument('--cache', dest='cache', help='component cache directory', default='../cache') # TODO: path to root from autopilot
 options = args.parse_args()
 
 uav = UAV(tcp = options.address, modem = options.modem, cache = options.cache)

@@ -16,6 +16,7 @@ RUN apt-get install -y libxft2
 RUN apt-get install -y python3
 RUN apt-get install -y pip
 RUN pip install serial
+RUN pip install pynput
 
 
 RUN chmod +x Autopilot
@@ -24,4 +25,4 @@ RUN chmod +x start.sh
 
 EXPOSE 8000
 
-CMD "./start.sh"
+CMD "./start_test.sh"

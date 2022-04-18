@@ -20,8 +20,11 @@ print("preflighted")
 uav.control.takeoff()
 time.sleep(13)
 print("takeoffed")
-x = uav.messenger.hub['Ublox']
-print(x)
+x, y, z = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
+		  int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
+		  int(uav.messenger.hub['Ublox']['altitude'].read()[0])
+
+print(x,y,z)
 
 
 def on_press(key):
@@ -53,8 +56,8 @@ def on_release(key):
 		return False
 
 # Collect events until released
-# listener = keyboard.Listener(
-#         on_press=on_press,
-#         on_release=on_release)
-# listener.start()
-# listener.join()
+listener = keyboard.Listener(
+        on_press=on_press,
+        on_release=on_release)
+listener.start()
+listener.join()

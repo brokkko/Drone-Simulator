@@ -18,21 +18,6 @@
               <option name="containerPort" value="8000" />
               <option name="hostPort" value="57891" />
             </DockerPortBindingImpl>
-            <DockerPortBindingImpl>
-              <option name="containerPort" value="8000" />
-              <option name="hostPort" value="57891" />
-              <option name="protocol" value="udp" />
-            </DockerPortBindingImpl>
-            <DockerPortBindingImpl>
-              <option name="containerPort" value="5000" />
-              <option name="hostPort" value="5000" />
-              <option name="protocol" value="udp" />
-            </DockerPortBindingImpl>
-            <DockerPortBindingImpl>
-              <option name="containerPort" value="5002" />
-              <option name="hostPort" value="5002" />
-              <option name="protocol" value="udp" />
-            </DockerPortBindingImpl>
           </list>
         </option>
         <option name="volumeBindings">

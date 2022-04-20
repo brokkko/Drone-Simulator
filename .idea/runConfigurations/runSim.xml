@@ -4,28 +4,23 @@
       <settings>
         <option name="imageTag" value="sim" />
         <option name="containerName" value="sim" />
-        <option name="envVars">
-          <list>
-            <DockerEnvVarImpl>
-              <option name="name" value="DISPLAY" />
-              <option name="value" value="192.168.1.2:0.0" />
-            </DockerEnvVarImpl>
-          </list>
-        </option>
         <option name="portBindings">
           <list>
             <DockerPortBindingImpl>
               <option name="containerPort" value="8000" />
-              <option name="hostPort" value="8000" />
-              <option name="protocol" value="udp" />
-            </DockerPortBindingImpl>
-            <DockerPortBindingImpl>
-              <option name="containerPort" value="8000" />
-              <option name="hostPort" value="8000" />
+              <option name="hostPort" value="57891" />
             </DockerPortBindingImpl>
           </list>
         </option>
         <option name="commandLineOptions" value="--rm" />
+        <option name="volumeBindings">
+          <list>
+            <DockerVolumeBindingImpl>
+              <option name="containerPath" value="/usr/src/app/cache" />
+              <option name="hostPath" value="C:\Users\tucha\Desktop\C_source\Drone-Simulator2\connector\cache" />
+            </DockerVolumeBindingImpl>
+          </list>
+        </option>
       </settings>
     </deployment>
     <method v="2" />

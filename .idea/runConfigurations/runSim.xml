@@ -3,6 +3,7 @@
     <deployment type="docker-image">
       <settings>
         <option name="imageTag" value="sim" />
+        <option name="command" value="./start.sh" />
         <option name="containerName" value="sim" />
         <option name="portBindings">
           <list>
@@ -13,6 +14,7 @@
           </list>
         </option>
         <option name="commandLineOptions" value="--rm" />
+        <option name="showCommandPreview" value="true" />
         <option name="volumeBindings">
           <list>
             <DockerVolumeBindingImpl>

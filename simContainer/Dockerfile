@@ -12,12 +12,13 @@ RUN apt-get install -y libx11-dev
 RUN apt install -y libxext6
 RUN apt-get install -y libxfixes-dev
 RUN apt-get install -y libxft2
+RUN su
 
 
 RUN chmod +x Autopilot
-RUN chmod +x simulator
+RUN chmod +x simulator-cli
 RUN chmod +x start.sh
 
 EXPOSE 8000
 
-CMD "./start.sh"
+#CMD ["./start.sh"]

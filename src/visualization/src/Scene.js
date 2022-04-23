@@ -21,6 +21,8 @@ class Scene extends Component {
         this.dronesRenderer = new DronesRenderer(this.scene)
 
         this.startAnimation()
+        document.onkeydown = this.onKeyPressed
+        document.onkeyup = this.onKeyReleased
 
     }
 

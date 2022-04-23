@@ -1,5 +1,5 @@
-import Vector
-from State import State
+from src.Vector import Vector
+from src.State import State
 
 
 class Drone:

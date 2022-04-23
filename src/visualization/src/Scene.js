@@ -12,6 +12,7 @@ class Scene extends Component {
         this.init();
         this.socket = props.Socket
         this.socket.onmessage = this.socketOnMessage
+        this.keyboardState = '0'
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls.enableDamping = true
         this.controls.maxPolarAngle = Math.PI/2
@@ -20,15 +21,26 @@ class Scene extends Component {
 
         this.dronesRenderer = new DronesRenderer(this.scene)
 
+
         this.startAnimation()
         document.onkeydown = this.onKeyPressed
         document.onkeyup = this.onKeyReleased
 
     }
 
+    onKeyPressed = (e) => {
+        if(e.key === 'w' || e.key === 'a' || e.key === 's' || e.key === 'd' || e.key === 'q')
+            this.keyboardState = e.key;
+    }
+
+    onKeyReleased = (e) => {
+        this.keyboardState = '0';
+    }
+
     socketOnMessage = (event) =>{
         let positions = parseData(event.data)
         this.dronesRenderer.updatePositions(positions)
+        this.socket.send(this.keyboardState)
     }
 
     startAnimation = () =>{

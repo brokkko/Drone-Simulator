@@ -1,7 +1,7 @@
 import math
-from Drone import Drone
-from Vector import Vector
-from State import State
+from src.Drone import Drone
+from src.Vector import Vector
+from src.State import State
 
 
 class DronePhysics:

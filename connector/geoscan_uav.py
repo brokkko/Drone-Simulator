@@ -307,14 +307,17 @@ class Control:
             
     def go_manual_22mode(self, northSpeed, eastSpeed, downSpeed, yawSpeed, interval):
         try:
+            self.uav().messenger.hub['ManualControl']['speed'].write(0)
+            self.uav().messenger.hub['ManualControl']['interval'].write(interval)
+            self.uav().messenger.hub['ManualControl']['mode'].write(5)
             self.uav().messenger.hub['ManualControl']['northSpeed'].write(northSpeed)
             self.uav().messenger.hub['ManualControl']['eastSpeed'].write(eastSpeed)
             self.uav().messenger.hub['ManualControl']['downSpeed'].write(downSpeed)
             self.uav().messenger.hub['ManualControl']['yawSpeed'].write(yawSpeed)
             self.uav().messenger.hub['ManualControl']['altitude'].write(0)
-            self.uav().messenger.hub['ManualControl']['speed'].write(0)
-            self.uav().messenger.hub['ManualControl']['interval'].write(interval)
-            self.uav().messenger.hub['ManualControl']['mode'].write(5)
+            # self.uav().messenger.hub['ManualControl']['speed'].write(0)
+            # self.uav().messenger.hub['ManualControl']['interval'].write(interval)
+            # self.uav().messenger.hub['ManualControl']['mode'].write(5)
         except:
             return False
         return True

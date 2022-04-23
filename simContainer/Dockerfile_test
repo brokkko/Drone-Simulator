@@ -21,7 +21,7 @@ RUN pip install pynput
 
 RUN chmod +x Autopilot
 RUN chmod +x simulator
-RUN chmod +x start.sh
+RUN chmod +x start_test.sh
 
 EXPOSE 8000
 

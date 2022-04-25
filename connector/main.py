@@ -1,4 +1,5 @@
 import asyncio
+import math
 import websockets
 from src.Drone import Drone
 from src.Vector import Vector
@@ -6,10 +7,7 @@ from src.DronePhysics import DronePhysics
 import argparse
 import time
 from connector.geoscan_uav import UAV
-# from pynput import keyboard
-import keyboard
 import pyproj
-from pyproj import Proj
 
 
 def addNeighbors(drones):
@@ -28,18 +26,14 @@ def init():
     drones.append(Drone(Vector(220, 50 * 1, 48), Vector(0, 0, 0), Vector(500, 50 * 8, 30), 8, False))
     drones.append(Drone(Vector(380, 50 * 4 + 17, 52), Vector(0, 0, 0), Vector(500, 50 * 9, 30), 9, False))
     drones.append(Drone(Vector(250, 50 * 2, 50), Vector(0, 0, 0), Vector(500, 50 * 9, 0), 9, False))
-    # drones.append(Drone(Vector(250, 50 * 2 + 17 * 3, 0), Vector(0, 0, 0), Vector(500, 50 * 9, 0), 9))
 
     return drones
 
 
-P = Proj(proj='utm',zone=10,ellps='WGS84', preserve_units=False)
-G = pyproj.Geod(ellps='WGS84')
-
-
-def latlon_to_xy(lat, lon):
-    return P(lat, lon)
-
+transformer = pyproj.Transformer.from_crs(
+    {"proj": 'latlong', "ellps": 'WGS84', "datum": 'WGS84'},
+    {"proj": 'geocent', "ellps": 'WGS84', "datum": 'WGS84'},
+)
 
 args = argparse.ArgumentParser()
 args.add_argument('--address', dest='address', help='server address and port X.X.X.X:X', default='127.0.0.1:57891')
@@ -61,8 +55,15 @@ x, y, z = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
           int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
           int(uav.messenger.hub['Ublox']['altitude'].read()[0])
 #
-y0, x0 = P(y/(10**7), x/(10**7))
-# print("Center: ", y0, x0)
+y0, x0, z0 = transformer.transform(lat0/(10**7), lon0/(10**7), alt0/(10**3), radians=False)
+
+phi, v = math.radians(-lon0), math.radians(-(90 + lat0))
+
+xStart = math.cos(v) * math.cos(phi) * x0 + math.sin(phi) * y0 + math.sin(v) * math.cos(phi) * z0
+yStart = -math.cos(v) * math.sin(phi) * x0 + math.cos(phi) * y0 - math.sin(v) * math.sin(phi) * z0
+zStart = -math.sin(v)*x0 + math.cos(v)*z0
+print(">> ", x0, y0, z0)
+print(xStart, yStart, zStart)
 
 drone = Drone(Vector(0, 0, 50), Vector(0, 0, 0), Vector(500, 500, 50), 1, False)
 drone.neighbors = []
@@ -84,7 +85,7 @@ async def main(websocket, path):
         vel_mm_c = 1000
         north = 0
         east = 0
-        down = vel_mm_c
+        down = 0
 
         # for index in range(len(droneList)):
         #     physics.rungeKutta(droneList[index], h)
@@ -95,7 +96,6 @@ async def main(websocket, path):
         # str_to_send = '|'.join(str_to_send)
 
         if data =='w':
-            # print("w PRESSED!!!")
             north = vel_mm_c
         elif data == 's':
             north = -vel_mm_c
@@ -106,81 +106,36 @@ async def main(websocket, path):
         elif data == 'q':
             down = -vel_mm_c
 
-        x1, y1, z1 = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
+        lat, lon, alt = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
                      int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
                      int(uav.messenger.hub['Ublox']['altitude'].read()[0])
-        # x1 = y1 = z1 = 0
 
-        y1, x1 = P(y1/(10**7), x1/(10**7))
-        #print("World position: ", y1, x1, z1/100)
-        #print("Position on map: ", y1 - y0, x1 - x0, z1/100)
-        drone.state.position.x = y1 - y0
-        drone.state.position.y = x1-x0
-        drone.state.position.z = z1/100 + 30
-        if data != '0' and last != data:
-            print("AAAAAAA: ", north, east, down)
+        y, x, z = transformer.transform(lat/(10**7), lon/(10**7), alt/(10**3), radians=False)
+
+        x1 = math.cos(v) * math.cos(phi) * x + math.sin(phi) * y + math.sin(v) * math.cos(phi) * z
+        y1 = -math.cos(v) * math.sin(phi) * x + math.cos(phi) * y - math.sin(v) * math.sin(phi) * z
+        z1 = -math.sin(v)*x + math.cos(v)*z
+
+        drone.state.position.x = x1 - xStart
+        drone.state.position.y = y1 - yStart
+        drone.state.position.z = z1 - zStart
+        # print(x0, y0, z0)
+        # print("Drone: ", drone.state.position.x, drone.state.position.y, drone.state.position.z)
+        if data != '0':
+            # print(x1, y1, z1)
+            # print("Drone: ", drone.state.position.x, drone.state.position.y, drone.state.position.z)
             uav.control.go_manual_22mode(north, east, down, 0, 1000)
-            # data = '0'
 
         str_to_send = [f'{drone.state.position.x} {drone.state.position.z} {drone.state.position.y} {1}']
         str_to_send = '|'.join(str_to_send)
 
         await websocket.send(str_to_send)
         await asyncio.sleep(1.0/60)
-        last = data
+
         data = await websocket.recv()
-        #print(data)
 
 start_server = websockets.serve(main, 'localhost', 8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 asyncio.get_event_loop().run_forever()
-
-
-# def on_press(key):
-#     vel_mm_c = 1000
-#     north = 0
-#     east = 0
-#     down = 0
-#     try:
-#         # print('Alphanumeric key pressed: {0} '.format(key.char))
-#         if key.char == 'w':
-#             north = vel_mm_c
-#         elif key.char == 's':
-#             north = -vel_mm_c
-#         elif key.char == 'a':
-#             east = -vel_mm_c
-#         elif key.char == 'd':
-#             east = vel_mm_c
-#     except AttributeError:
-#         # print('special key pressed: {0}'.format(key))
-#         if key == keyboard.Key.up:
-#             down = -vel_mm_c
-#         elif key == keyboard.Key.down:
-#             down = vel_mm_c
-#     # print("Velocity: ", north, east, down)
-#     x1, y1, z1 = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
-#                  int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
-#                  int(uav.messenger.hub['Ublox']['altitude'].read()[0])
-#
-#     y1, x1 = P(y1/(10**7), x1/(10**7))
-#     print("World position: ", y1, x1, z1/1000)
-#     print("Position on map: ", y1 - y0, x1 - x0, z1/1000)
-#     drone.state.position.x = y1 - y0
-#     drone.state.position.y = x1-x0
-#     uav.control.go_manual_22mode(north, east, down, 0, 1000)
-#
-#
-# def on_release(key):
-#     # print('Key released: {0}'.format(key))
-#     if key == keyboard.Key.esc:
-#         return False
-#
-#
-# # Collect events until released
-# listener = keyboard.Listener(
-#     on_press=on_press,
-#     on_release=on_release)
-# listener.start()
-# listener.join()
 

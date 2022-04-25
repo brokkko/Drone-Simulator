@@ -51,7 +51,7 @@ print("preflighted")
 uav.control.takeoff()
 time.sleep(13)
 print("takeoffed")
-x, y, z = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
+lat0, lon0, alt0 = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
           int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
           int(uav.messenger.hub['Ublox']['altitude'].read()[0])
 #
@@ -137,5 +137,6 @@ async def main(websocket, path):
 start_server = websockets.serve(main, 'localhost', 8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
+print('ready to connect')
 asyncio.get_event_loop().run_forever()
 

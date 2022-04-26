@@ -23,19 +23,19 @@ class Scene extends Component {
 
 
         this.startAnimation()
-        document.onkeydown = this.onKeyPressed
-        document.onkeyup = this.onKeyReleased
+        // document.onkeydown = this.onKeyPressed
+        // document.onkeyup = this.onKeyReleased
 
     }
 
-    onKeyPressed = (e) => {
-        if(e.key === 'w' || e.key === 'a' || e.key === 's' || e.key === 'd' || e.key === 'q')
-            this.keyboardState = e.key;
-    }
-
-    onKeyReleased = (e) => {
-        this.keyboardState = '0';
-    }
+    // onKeyPressed = (e) => {
+    //     if(e.key === 'w' || e.key === 'a' || e.key === 's' || e.key === 'd' || e.key === 'q')
+    //         this.keyboardState = e.key;
+    // }
+    //
+    // onKeyReleased = (e) => {
+    //     this.keyboardState = '0';
+    // }
 
     socketOnMessage = (event) =>{
         let positions = parseData(event.data)

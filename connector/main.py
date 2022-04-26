@@ -66,61 +66,22 @@ def init_drone_connection(drones: []) -> Vector:
 
 
 async def server(websocket, path):
-    drone = Drone(Vector(0, 0, 50), Vector(0, 0, 0), Vector(500, 500, 50), 1, False)
-    drone.neighbors = []
-    # droneList = init()
-    # addNeighbors(droneList)
-    # physics = DronePhysics()
-    # h = 0.15
-
-    vel_mm_c = 1000
-    data = '0'
+    ports = ["57891"]
+    vel_m_c = 1
+    drones = create_drones(ports, vel_m_c)
+    lat0, lon0, alt0 = init_drone_connection(drones)
 
     while True:
-        north = 0
-        east = 0
-        down = 0
+        for drone in drones:
+            drone.update()
 
-        # for index in range(len(droneList)):
-        #     physics.rungeKutta(droneList[index], h)
-
-        # str_to_send = []
-        # for i in droneList:
-        #     str_to_send.append(f'{i.state.position.x} {i.state.position.z} {i.state.position.y} {int(i.connected)}')
-        # str_to_send = '|'.join(str_to_send)
-
-        if data =='w':
-            north = vel_mm_c
-        elif data == 's':
-            north = -vel_mm_c
-        elif data == 'a':
-            east = -vel_mm_c
-        elif data == 'd':
-            east = vel_mm_c
-        elif data == 'q':
-            down = -vel_mm_c
-
-        lat, lon, alt = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
-                        int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
-                        int(uav.messenger.hub['Ublox']['altitude'].read()[0])
-
-        coord_list = geodetic2enu(lat / (10 ** 7), lon / (10 ** 7), alt / (10 ** 3), lat0, lon0, alt0)
-        print(coord_list)
-
-        drone.state.position.x = coord_list[0]
-        drone.state.position.y = coord_list[1]
-        drone.state.position.z = coord_list[2]
-
-        if data != '0':
-            uav.control.go_manual_22mode(north, east, down, 0, 1000)
-
-        str_to_send = [f'{drone.state.position.x} {drone.state.position.z} {drone.state.position.y} {1}']
+        str_to_send = []
+        for i in drones:
+            str_to_send.append(f'{i.state.position.x} {i.state.position.z} {i.state.position.y} {int(i.connected)}')
         str_to_send = '|'.join(str_to_send)
 
         await websocket.send(str_to_send)
         await asyncio.sleep(1.0 / 60)
-
-        data = await websocket.recv()
 
 
 start_server = websockets.serve(server, 'localhost', 8765)

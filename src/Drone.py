@@ -1,5 +1,6 @@
 from src.Vector import Vector
 from src.State import State
+from src.DroneConnection import DroneConnection
 
 
 class Drone:
@@ -25,5 +26,3 @@ class Drone:
 
     def __str__(self):
         return f'Drone {self.id} - {self.state}'
-
-

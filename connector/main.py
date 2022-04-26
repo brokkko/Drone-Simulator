@@ -38,28 +38,31 @@ def geodetic2enu(lat, lon, alt, lat_org, lon_org, alt_org):
     return enu.T
 
 
-#def init_drone_connection():
-args = argparse.ArgumentParser()
-args.add_argument('--address', dest='address', help='server address and port X.X.X.X:X', default='127.0.0.1:57891')
-args.add_argument('--modem', dest='modem', help='modem socket', default='1:2')
-args.add_argument('--cache', dest='cache', help='component cache directory', default='/cache')
-options = args.parse_args()
+def create_drones(ports: [], vel_m_c) -> []:
+    drones = []
+    safe_radius = 40
+    id = 1
+    for port in ports:
+        drones.append(Drone(vel_m_c, Vector(500, 500, 50), id, safe_radius, True, port))
+        id += 1
+    addNeighbors(drones)
+    return drones
 
-uav = UAV(tcp=options.address, modem=options.modem, cache=options.cache)
-uav.connect()
-time.sleep(3)
-print("connected")
-uav.control.preflight()
-time.sleep(1)
-print("preflighted")
-uav.control.takeoff()
-time.sleep(3)
-print("takeoffed")
-lat0, lon0, alt0 = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
-                   int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
-                   int(uav.messenger.hub['Ublox']['altitude'].read()[0])
 
-lat0, lon0, alt0 = lat0 / (10 ** 7), lon0 / (10 ** 7), alt0 / (10 ** 3)
+def init_drone_connection(drones: []) -> Vector:
+    for drone in drones:
+        drone.connect()
+    time.sleep(3)
+    print("connected")
+    for drone in drones:
+        drone.uav.control.preflight()
+    time.sleep(1)
+    print("preflighted")
+    for drone in drones:
+        drone.uav.control.takeoff()
+    time.sleep(13)
+    print("took off")
+    return drones[0].getPos()
 
 
 async def server(websocket, path):

@@ -19,7 +19,7 @@ class DronesRenderer{
     updatePositions(coordinates){
 
         for (let i of coordinates){
-            i.pos.multiplyScalar(1/10)
+            i.pos.multiplyScalar(1/5)
         }
 
         if(this.drones.length === 0){ // if no drones created yet

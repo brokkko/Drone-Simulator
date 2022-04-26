@@ -7,7 +7,9 @@ from src.DronePhysics import DronePhysics
 import argparse
 import time
 from connector.geoscan_uav import UAV
+import numpy as np
 import pyproj
+import scipy.spatial.transform
 
 
 def addNeighbors(drones):
@@ -35,6 +37,8 @@ transformer = pyproj.Transformer.from_crs(
     {"proj": 'geocent', "ellps": 'WGS84', "datum": 'WGS84'},
 )
 
+
+#def init_drone_connection():
 args = argparse.ArgumentParser()
 args.add_argument('--address', dest='address', help='server address and port X.X.X.X:X', default='127.0.0.1:57891')
 args.add_argument('--modem', dest='modem', help='modem socket', default='1:2')
@@ -43,30 +47,19 @@ options = args.parse_args()
 
 uav = UAV(tcp=options.address, modem=options.modem, cache=options.cache)
 uav.connect()
-time.sleep(10)
+time.sleep(3)
 print("connected")
 uav.control.preflight()
 time.sleep(1)
 print("preflighted")
 uav.control.takeoff()
-time.sleep(13)
+time.sleep(3)
 print("takeoffed")
 lat0, lon0, alt0 = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
-          int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
-          int(uav.messenger.hub['Ublox']['altitude'].read()[0])
-#
-y0, x0, z0 = transformer.transform(lat0/(10**7), lon0/(10**7), alt0/(10**3), radians=False)
+                   int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
+                   int(uav.messenger.hub['Ublox']['altitude'].read()[0])
 
-phi, v = math.radians(-lon0), math.radians(-(90 + lat0))
-
-xStart = math.cos(v) * math.cos(phi) * x0 + math.sin(phi) * y0 + math.sin(v) * math.cos(phi) * z0
-yStart = -math.cos(v) * math.sin(phi) * x0 + math.cos(phi) * y0 - math.sin(v) * math.sin(phi) * z0
-zStart = -math.sin(v)*x0 + math.cos(v)*z0
-print(">> ", x0, y0, z0)
-print(xStart, yStart, zStart)
-
-drone = Drone(Vector(0, 0, 50), Vector(0, 0, 0), Vector(500, 500, 50), 1, False)
-drone.neighbors = []
+lat0, lon0, alt0 = lat0 / (10 ** 7), lon0 / (10 ** 7), alt0 / (10 ** 3)
 
 
 async def main(websocket, path):
@@ -107,20 +100,16 @@ async def main(websocket, path):
             down = -vel_mm_c
 
         lat, lon, alt = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
-                     int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
-                     int(uav.messenger.hub['Ublox']['altitude'].read()[0])
+                        int(uav.messenger.hub['Ublox']['longitude'].read()[0]), \
+                        int(uav.messenger.hub['Ublox']['altitude'].read()[0])
 
-        y, x, z = transformer.transform(lat/(10**7), lon/(10**7), alt/(10**3), radians=False)
+        coord_list = geodetic2enu(lat / (10 ** 7), lon / (10 ** 7), alt / (10 ** 3), lat0, lon0, alt0)
+        print(coord_list)
 
-        x1 = math.cos(v) * math.cos(phi) * x + math.sin(phi) * y + math.sin(v) * math.cos(phi) * z
-        y1 = -math.cos(v) * math.sin(phi) * x + math.cos(phi) * y - math.sin(v) * math.sin(phi) * z
-        z1 = -math.sin(v)*x + math.cos(v)*z
+        drone.state.position.x = coord_list[0]
+        drone.state.position.y = coord_list[1]
+        drone.state.position.z = coord_list[2]
 
-        drone.state.position.x = x1 - xStart
-        drone.state.position.y = y1 - yStart
-        drone.state.position.z = z1 - zStart
-        # print(x0, y0, z0)
-        # print("Drone: ", drone.state.position.x, drone.state.position.y, drone.state.position.z)
         if data != '0':
             # print(x1, y1, z1)
             # print("Drone: ", drone.state.position.x, drone.state.position.y, drone.state.position.z)
@@ -130,7 +119,7 @@ async def main(websocket, path):
         str_to_send = '|'.join(str_to_send)
 
         await websocket.send(str_to_send)
-        await asyncio.sleep(1.0/60)
+        await asyncio.sleep(1.0 / 60)
 
         data = await websocket.recv()
 

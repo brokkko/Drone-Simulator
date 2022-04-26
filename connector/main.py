@@ -1,5 +1,4 @@
 import asyncio
-import math
 import websockets
 from src.Drone import Drone
 from src.Vector import Vector
@@ -19,23 +18,24 @@ def addNeighbors(drones):
                 drone1.neighbors.append(drone2)
 
 
-def init():
-    drones = []
-    for index in range(1, 7):
-        drones.append(Drone(Vector(10, 50 * index, 50), Vector(7, 0, 0), Vector(500, 50 * index, 50), index, True))
+def geodetic2enu(lat, lon, alt, lat_org, lon_org, alt_org):
+    transformer = pyproj.Transformer.from_crs(
+        {"proj": 'latlong', "ellps": 'WGS84', "datum": 'WGS84'},
+        {"proj": 'geocent', "ellps": 'WGS84', "datum": 'WGS84'},
+    )
+    x, y, z = transformer.transform(lon, lat, alt, radians=False)
+    x_org, y_org, z_org = transformer.transform(lon_org, lat_org, alt_org, radians=False)
+    vec = np.array([[x - x_org, y - y_org, z - z_org]]).T
 
-    drones.append(Drone(Vector(250, 50 * 3, 50), Vector(0, 0, 0), Vector(500, 50 * 7, 30), 7, False))
-    drones.append(Drone(Vector(220, 50 * 1, 48), Vector(0, 0, 0), Vector(500, 50 * 8, 30), 8, False))
-    drones.append(Drone(Vector(380, 50 * 4 + 17, 52), Vector(0, 0, 0), Vector(500, 50 * 9, 30), 9, False))
-    drones.append(Drone(Vector(250, 50 * 2, 50), Vector(0, 0, 0), Vector(500, 50 * 9, 0), 9, False))
+    rot1 = scipy.spatial.transform.Rotation.from_euler('x', -(90 - lat_org),
+                                                       degrees=True).as_matrix()  # angle*-1 : left handed *-1
+    rot3 = scipy.spatial.transform.Rotation.from_euler('z', -(90 + lon_org),
+                                                       degrees=True).as_matrix()  # angle*-1 : left handed *-1
 
-    return drones
+    rotation_matrix = rot1.dot(rot3)
 
-
-transformer = pyproj.Transformer.from_crs(
-    {"proj": 'latlong', "ellps": 'WGS84', "datum": 'WGS84'},
-    {"proj": 'geocent', "ellps": 'WGS84', "datum": 'WGS84'},
-)
+    enu = rotation_matrix.dot(vec).T.ravel()
+    return enu.T
 
 
 #def init_drone_connection():
@@ -62,20 +62,18 @@ lat0, lon0, alt0 = int(uav.messenger.hub['Ublox']['latitude'].read()[0]), \
 lat0, lon0, alt0 = lat0 / (10 ** 7), lon0 / (10 ** 7), alt0 / (10 ** 3)
 
 
-async def main(websocket, path):
+async def server(websocket, path):
+    drone = Drone(Vector(0, 0, 50), Vector(0, 0, 0), Vector(500, 500, 50), 1, False)
+    drone.neighbors = []
     # droneList = init()
     # addNeighbors(droneList)
     # physics = DronePhysics()
     # h = 0.15
 
     vel_mm_c = 1000
-    north = 0
-    east = 0
-    down = vel_mm_c
-    data = last = '0'
+    data = '0'
 
     while True:
-        vel_mm_c = 1000
         north = 0
         east = 0
         down = 0
@@ -111,8 +109,6 @@ async def main(websocket, path):
         drone.state.position.z = coord_list[2]
 
         if data != '0':
-            # print(x1, y1, z1)
-            # print("Drone: ", drone.state.position.x, drone.state.position.y, drone.state.position.z)
             uav.control.go_manual_22mode(north, east, down, 0, 1000)
 
         str_to_send = [f'{drone.state.position.x} {drone.state.position.z} {drone.state.position.y} {1}']
@@ -123,7 +119,8 @@ async def main(websocket, path):
 
         data = await websocket.recv()
 
-start_server = websockets.serve(main, 'localhost', 8765)
+
+start_server = websockets.serve(server, 'localhost', 8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 print('ready to connect')

@@ -1,11 +1,9 @@
 import asyncio
 import websockets
 from src.Drone import Drone
-from src.Vector import Vector
 from src.DronePhysics import DronePhysics
-import argparse
+from src.Vector import Vector
 import time
-from connector.geoscan_uav import UAV
 import numpy as np
 import pyproj
 import scipy.spatial.transform
@@ -38,13 +36,13 @@ def geodetic2enu(lat, lon, alt, lat_org, lon_org, alt_org):
     return enu.T
 
 
-def create_drones(ports: [], vel_m_c) -> []:
+def create_drones(vel_m_c, targets: []) -> []:
     drones = []
     safe_radius = 40
-    id = 1
-    for port in ports:
-        drones.append(Drone(vel_m_c, Vector(500, 500, 50), id, safe_radius, True, port))
-        id += 1
+    drone_id = 1
+    for target in targets:
+        drones.append(Drone(vel_m_c, target, drone_id, safe_radius, True))
+        drone_id += 1
     addNeighbors(drones)
     return drones
 
@@ -62,18 +60,29 @@ def init_drone_connection(drones: []) -> Vector:
         drone.uav.control.takeoff()
     time.sleep(13)
     print("took off")
-    return drones[0].getPos()
+    lat0, lon0, alt0 = drones[0].getLLA()
+
+    for drone in drones:
+        lat, lon, alt = drone.getLLA()
+        drone.start_position.setXYZ(*geodetic2enu(lat, lon, alt, lat0, lon0, alt0))
+    return drones[0].getLLA()
 
 
 async def server(websocket, path):
-    ports = ["57891"]
+    if len(DroneConnector.occupiedPorts) > 0:
+        return
+
+    print("hello")
     vel_m_c = 1
-    drones = create_drones(ports, vel_m_c)
+    targets = [Vector(0, 50, 50)] # [Vector(0, 0, 100)] #[Vector(50, 0, 20)]
+    drones = create_drones(vel_m_c, targets)
     lat0, lon0, alt0 = init_drone_connection(drones)
+    physics = DronePhysics()
 
     while True:
         for drone in drones:
-            drone.update()
+            lat, lon, alt = drone.getLLA()
+            drone.state.position.setXYZ(*geodetic2enu(lat, lon, alt, lat0, lon0, alt0))  # TODO: hide
 
         str_to_send = []
         for i in drones:
@@ -83,10 +92,18 @@ async def server(websocket, path):
         await websocket.send(str_to_send)
         await asyncio.sleep(1.0 / 60)
 
+        for drone in drones:
+            print(drone.state.position)
+            new_velocity = physics.construct_velocity_vector(drone)
+            # new_velocity = Vector(1, 0, 0)
+            print(drone.id, ": ", new_velocity)
+            # преобразовали
+            drone.velocity = new_velocity
+        print("---------------------------------")
+
 
 start_server = websockets.serve(server, 'localhost', 8765)
 
 asyncio.get_event_loop().run_until_complete(start_server)
 print('ready to connect')
 asyncio.get_event_loop().run_forever()
-

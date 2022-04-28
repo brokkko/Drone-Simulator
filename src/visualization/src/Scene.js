@@ -12,7 +12,7 @@ class Scene extends Component {
         this.init();
         this.socket = props.Socket
         this.socket.onmessage = this.socketOnMessage
-        this.keyboardState = '0'
+        // this.keyboardState = '0'
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls.enableDamping = true
         this.controls.maxPolarAngle = Math.PI/2
@@ -40,7 +40,7 @@ class Scene extends Component {
     socketOnMessage = (event) =>{
         let positions = parseData(event.data)
         this.dronesRenderer.updatePositions(positions)
-        this.socket.send(this.keyboardState)
+        //this.socket.send(this.keyboardState)
     }
 
     startAnimation = () =>{

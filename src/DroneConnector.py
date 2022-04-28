@@ -3,7 +3,7 @@ from connector.geoscan_uav import UAV
 
 
 class DroneConnector(UAV):
-    startPort = 57981
+    startPort = 57891
     occupiedPorts = []
 
     def __init__(self):

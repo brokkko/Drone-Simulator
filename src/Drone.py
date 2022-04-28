@@ -1,11 +1,11 @@
 from src.Vector import Vector
 from src.State import State
-from src.DroneConnection import DroneConnection
+from src.DroneConnector import DroneConnector
 
 
 class Drone:
-    def __init__(self, vel_m_c: int, target: Vector, id: int, safe_radius: int, connected: bool, port: str):
-        self.uav = DroneConnection(port)
+    def __init__(self, vel_m_c: int, target: Vector, id: int, safe_radius: int, connected: bool):
+        self.uav = DroneConnector()
         self.start_position = self.getPos()
         self.target = target
         self.maxSpeed = vel_m_c

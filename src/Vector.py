@@ -3,14 +3,14 @@ import math
 
 class Vector:
 
-    def __init__(self, x, y, z):
+    def __init__(self, x=0., y=0., z=0.):
 
         self.x = x
         self.y = y
         self.z = z
 
     def __str__(self):
-        return f'x={self.x} y={self.y}'
+        return f'x={self.x} y={self.y} z={self.z}'
 
     def __add__(self, other):
         if isinstance(other, Vector):
@@ -47,6 +47,11 @@ class Vector:
 
     def get_xy(self) -> (int, int):
         return int(self.x), int(self.y)
+
+    def setXYZ(self, x, y, z):
+        self.x = x
+        self.y = y
+        self.z = z
 
     def copy(self):
         return Vector(*self.get_xyz())

@@ -13,6 +13,7 @@ class DroneConnector(UAV):
         args.add_argument('--modem', dest='modem', help='modem socket', default='1:2')
         args.add_argument('--cache', dest='cache', help='component cache directory', default='/cache')
         options = args.parse_args()
+        print(f'address is set to {options.address}')
 
         super().__init__(tcp=options.address, modem=options.modem, cache=options.cache)
 

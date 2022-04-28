@@ -8,7 +8,8 @@ from src.DroneConnector import DroneConnector
 class Drone:
     def __init__(self, vel_m_c: int, target: Vector, drone_id: int, safe_radius: int, connected: bool):
         self.uav = DroneConnector()
-        self.start_position = self.getPos()
+        self.start_position = Vector()
+        self._velocity = Vector()
         self.target = target
         self.maxSpeed = vel_m_c * 1000
         self.state = State(self.start_position)
@@ -17,10 +18,21 @@ class Drone:
         self.safe_radius = safe_radius
         self.connected = connected
 
-    def getPos(self) -> Vector:
-        lat, lon, alt = int(self.uav.messenger.hub['Ublox']['latitude'].read()[0]),\
-                      int(self.uav.messenger.hub['Ublox']['longitude'].read()[0]),\
-                      int(self.uav.messenger.hub['Ublox']['altitude'].read()[0])
+    @property
+    def velocity(self):
+        return self._velocity
+
+    @velocity.setter
+    def velocity(self, newVel: Vector):
+        newVel *= 1000
+        self.uav.control.go_manual_22mode(newVel.y, newVel.z, -newVel.z, 0, 1000)
+        # TODO: clamp values min(clamp_max, max(clamp_min, value))
+        self._velocity = newVel
+
+    def getLLA(self) -> Tuple[Union[float, Any], Union[float, Any], Union[float, Any]]:
+        lat, lon, alt = int(self.uav.messenger.hub['Ublox']['latitude'].read()[0]), \
+                        int(self.uav.messenger.hub['Ublox']['longitude'].read()[0]), \
+                        int(self.uav.messenger.hub['Ublox']['altitude'].read()[0])
         lat, lon, alt = lat / (10 ** 7), lon / (10 ** 7), alt / (10 ** 3)
         return lat, lon, alt
 

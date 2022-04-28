@@ -1,5 +1,7 @@
 import asyncio
 import websockets
+
+import src.DroneConnector
 from src.Drone import Drone
 from src.DronePhysics import DronePhysics
 from src.Vector import Vector
@@ -7,7 +9,7 @@ import time
 import numpy as np
 import pyproj
 import scipy.spatial.transform
-
+from src.DroneConnector import DroneConnector
 
 def addNeighbors(drones):
     for drone1 in drones:
@@ -59,6 +61,10 @@ def init_drone_connection(drones: []) -> Vector:
     for drone in drones:
         drone.uav.control.takeoff()
     time.sleep(13)
+
+    # for drone in drones:
+    #     drone.uav.control.go_manual_22mode(0, 0, -1000, 0, 1000)
+    # time.sleep(5)
     print("took off")
     lat0, lon0, alt0 = drones[0].getLLA()
 

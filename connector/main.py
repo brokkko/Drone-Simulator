@@ -3,15 +3,12 @@ import time
 
 import websockets
 
-import src.DroneConnector
 from src.Drone import Drone
 from src.DronePhysics import DronePhysics
 from src.Vector import Vector
-import time
-import numpy as np
-import pyproj
-import scipy.spatial.transform
-from src.DroneConnector import DroneConnector
+from src.ConnectService import ConnectService
+from src.СonvertService import ConvertService
+
 
 def addNeighbors(drones):
     for drone1 in drones:
@@ -20,29 +17,9 @@ def addNeighbors(drones):
                 drone1.neighbors.append(drone2)
 
 
-def geodetic2enu(lat, lon, alt, lat_org, lon_org, alt_org):
-    transformer = pyproj.Transformer.from_crs(
-        {"proj": 'latlong', "ellps": 'WGS84', "datum": 'WGS84'},
-        {"proj": 'geocent', "ellps": 'WGS84', "datum": 'WGS84'},
-    )
-    x, y, z = transformer.transform(lon, lat, alt, radians=False)
-    x_org, y_org, z_org = transformer.transform(lon_org, lat_org, alt_org, radians=False)
-    vec = np.array([[x - x_org, y - y_org, z - z_org]]).T
-
-    rot1 = scipy.spatial.transform.Rotation.from_euler('x', -(90 - lat_org),
-                                                       degrees=True).as_matrix()  # angle*-1 : left handed *-1
-    rot3 = scipy.spatial.transform.Rotation.from_euler('z', -(90 + lon_org),
-                                                       degrees=True).as_matrix()  # angle*-1 : left handed *-1
-
-    rotation_matrix = rot1.dot(rot3)
-
-    enu = rotation_matrix.dot(vec).T.ravel()
-    return enu.T
-
-
-def create_drones(vel_m_c, targets: []) -> []:
+def createDrones(vel_m_c, targets: []) -> []:
     drones = []
-    safe_radius = 40
+    safe_radius = 15
     drone_id = 1
     for target in targets:
         drones.append(Drone(vel_m_c, target, drone_id, safe_radius, True))
@@ -51,39 +28,42 @@ def create_drones(vel_m_c, targets: []) -> []:
     return drones
 
 
-def init_drone_connection(drones: []) -> Vector:
-    for drone in drones:
-        drone.connect()
-    time.sleep(3)
-    print("connected")
-    for drone in drones:
-        drone.uav.control.preflight()
-    time.sleep(1)
-    print("preflighted")
-    for drone in drones:
-        drone.uav.control.takeoff()
-    time.sleep(13)
+def main():
+    async def server(websocket, path):
+        while True:
+            timeStamp1 = time.time_ns() // 1000000
+            for drone in drones:
+                lat, lon, alt = drone.getLLA()
+                drone.state.position.setXYZ(*ConvertService.geodetic2enu(lat, lon, alt, lat0, lon0, alt0))  # TODO: hide
 
-    # for drone in drones:
-    #     drone.uav.control.go_manual_22mode(0, 0, -1000, 0, 1000)
-    # time.sleep(5)
-    print("took off")
-    lat0, lon0, alt0 = drones[0].getLLA()
+            data = []
+            for i in drones:
+                data.append(f'{i.state.position.x} {i.state.position.z} {i.state.position.y + 5} {int(i.connected)}')
+            data = '|'.join(data)
 
-    for drone in drones:
-        lat, lon, alt = drone.getLLA()
-        drone.start_position.setXYZ(*geodetic2enu(lat, lon, alt, lat0, lon0, alt0))
-    return drones[0].getLLA()
+            await websocket.send(data)
 
+            await asyncio.sleep(1.0 / 60)
 
-async def server(websocket, path):
-    if len(DroneConnector.occupiedPorts) > 0:
-        return
+            for drone in drones:
+                #print(drone.state.position)
+                new_velocity = physics.construct_velocity_vector(drone)
+                # преобразовали
+                #print(new_velocity)
+                drone.velocity = new_velocity
+            # print("---------------------------------")
+            timeStamp2 = time.time_ns() // 1000000
+            # if timeStamp2-timeStamp1 >= 0:
+            #     await asyncio.sleep(1/60 - (timeStamp2-timeStamp1)/1000)
+
+# ---------------------------------------------------main------------------------------------------
+#     if len(DroneConnector.occupiedPorts) > 0:
+#         return
 
     vel_m_c = 1
-    targets = [Vector(0, 50, 50)] # [Vector(0, 0, 100)] #[Vector(50, 0, 20)]
-    drones = create_drones(vel_m_c, targets)
-    lat0, lon0, alt0 = init_drone_connection(drones)
+    targets = [Vector(0, 20, 50)]#, Vector(0, 40, 50), Vector(0, 60, 50), Vector(0, 80, 50), Vector(0, 100, 50)]
+    drones = createDrones(vel_m_c, targets)
+    lat0, lon0, alt0 = ConnectService.connectDrones(drones)
     physics = DronePhysics()
 
     start_server = websockets.serve(server, 'localhost', 8765)
@@ -92,27 +72,6 @@ async def server(websocket, path):
     print('ready to connect')
     asyncio.get_event_loop().run_forever()
 
-    while True:
-        for drone in drones:
-            lat, lon, alt = drone.getLLA()
-            drone.state.position.setXYZ(*geodetic2enu(lat, lon, alt, lat0, lon0, alt0))  # TODO: hide
-
-        str_to_send = []
-        for i in drones:
-            str_to_send.append(f'{i.state.position.x} {i.state.position.z} {i.state.position.y} {int(i.connected)}')
-        str_to_send = '|'.join(str_to_send)
-
-        await websocket.send(str_to_send)
-        await asyncio.sleep(1.0 / 60)
-
-        for drone in drones:
-            print(drone.state.position)
-            new_velocity = physics.construct_velocity_vector(drone)
-            # new_velocity = Vector(1, 0, 0)
-            print(drone.id, ": ", new_velocity)
-            # преобразовали
-            drone.velocity = new_velocity
-        print("---------------------------------")
 
 if __name__ == '__main__':
     main()

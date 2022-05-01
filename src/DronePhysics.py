@@ -12,6 +12,9 @@ class DronePhysics:
         if drone.connected is False:
             return Vector()
 
+        if drone.state.position.distance_to(drone.target) <= 5:
+            return Vector(0, 0, 0)
+
         # вектор достижения цели
         V_goal: Vector = self.k1 * (drone.target - drone.state.position) / (drone.target - drone.state.position).length()
 

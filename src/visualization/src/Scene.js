@@ -42,7 +42,8 @@ class Scene extends Component {
     socketOnMessage = (event) =>{
         let positions = parseData(event.data)
         this.dronesRenderer.updatePositions(positions)
-        //this.socket.send(this.keyboardState)
+        // console.log("get it!!")
+        // this.socket.send(this.keyboardState)
     }
 
     startAnimation = () =>{

@@ -1,6 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<config name="Board"><entry name="number" type="uint32" value="0"/><entry name="serial" type="uint64" value="0"/><entry name="type" type="uint8" value="8"/>  <group name="version">
-    <entry name="major" type="uint8" value="3"/>
-    <entry name="minor" type="uint8" value="1"/>
-  </group>
-</config>

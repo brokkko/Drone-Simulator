@@ -3,7 +3,7 @@ from connector.geoscan_uav import UAV
 
 
 class DroneConnector(UAV):
-    startPort = 57891
+    startPort = 57890
     occupiedPorts = []
 
     def __init__(self):
@@ -11,7 +11,7 @@ class DroneConnector(UAV):
         args.add_argument('--address', dest='address', help='server address and port X.X.X.X:X',
                           default=f'127.0.0.1:{self._getPortOfFreeContainer()}')
         args.add_argument('--modem', dest='modem', help='modem socket', default='1:2')
-        args.add_argument('--cache', dest='cache', help='component cache directory', default='/cache')
+        args.add_argument('--cache', dest='cache', help='component cache directory', default=f'C:/CLion/Drone-Simulator/connector/caches/cache{len(DroneConnector.occupiedPorts) - 1}')
         options = args.parse_args()
         print(f'address is set to {options.address}')
 

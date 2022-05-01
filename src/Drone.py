@@ -24,8 +24,9 @@ class Drone:
 
     @velocity.setter
     def velocity(self, newVel: Vector):
-        newVel *= 1000
-        self.uav.control.go_manual_22mode(newVel.y, newVel.z, -newVel.z, 0, 1000)
+        newVel *= 100
+        newVel.setXYZ(int(newVel.x), int(newVel.y), int(newVel.z))
+        self.uav.control.go_manual_22mode(newVel.y, newVel.x, -newVel.z, 0, 1000) # n e d
         # TODO: clamp values min(clamp_max, max(clamp_min, value))
         self._velocity = newVel
 

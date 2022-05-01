@@ -12,6 +12,8 @@ class Scene extends Component {
         this.init();
         this.socket = props.Socket
         this.socket.onmessage = this.socketOnMessage
+        //this.socket.onmessage = (e) => (console.log(e))
+
         // this.keyboardState = '0'
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls.enableDamping = true

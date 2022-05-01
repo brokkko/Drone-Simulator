@@ -1,4 +1,6 @@
 import asyncio
+import time
+
 import websockets
 
 import src.DroneConnector
@@ -78,12 +80,17 @@ async def server(websocket, path):
     if len(DroneConnector.occupiedPorts) > 0:
         return
 
-    print("hello")
     vel_m_c = 1
     targets = [Vector(0, 50, 50)] # [Vector(0, 0, 100)] #[Vector(50, 0, 20)]
     drones = create_drones(vel_m_c, targets)
     lat0, lon0, alt0 = init_drone_connection(drones)
     physics = DronePhysics()
+
+    start_server = websockets.serve(server, 'localhost', 8765)
+
+    asyncio.get_event_loop().run_until_complete(start_server)
+    print('ready to connect')
+    asyncio.get_event_loop().run_forever()
 
     while True:
         for drone in drones:
@@ -107,9 +114,6 @@ async def server(websocket, path):
             drone.velocity = new_velocity
         print("---------------------------------")
 
+if __name__ == '__main__':
+    main()
 
-start_server = websockets.serve(server, 'localhost', 8765)
-
-asyncio.get_event_loop().run_until_complete(start_server)
-print('ready to connect')
-asyncio.get_event_loop().run_forever()

@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config name="Modules"><entry name="debug" type="bool" value="false"/><entry name="declination" type="bool" value="false"/><entry name="logfile" type="bool" value="true"/><entry name="lua" type="bool" value="true"/><entry name="simulator" type="uint8" value="1"/><entry name="zones" type="bool" value="false"/></config>

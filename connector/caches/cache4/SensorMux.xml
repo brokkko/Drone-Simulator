@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config name="SensorMux"><entry name="gnss" type="uint8" value="0"/><entry name="imu" type="uint8" value="1"/><entry name="lns" type="uint8" value="0"/><entry name="mag" type="uint8" value="1"/><entry name="power" type="uint8" value="2"/>  <group name="pressure">
+    <entry name="diff" type="uint8" value="1"/>
+    <entry name="stat" type="uint8" value="1"/>
+  </group>
+</config>

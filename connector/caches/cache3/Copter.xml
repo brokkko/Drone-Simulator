@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config name="Copter">
+  <group name="alt">
+    <entry name="b" type="float" value="0.0000"/>
+    <entry name="d" type="float" value="0.0000"/>
+    <entry name="heightOff" type="int32" value="20"/>
+    <entry name="i" type="float" value="0.4000"/>
+    <entry name="minHeight" type="uint32" value="0"/>
+    <entry name="p" type="float" value="0.4000"/>
+    <entry name="useRtk" type="bool" value="true"/>
+    <entry name="wBaro" type="float" value="0.2000"/>
+    <entry name="wRange" type="float" value="0.5000"/>
+    <entry name="wRtk" type="float" value="0.5000"/>
+  </group>
+  <entry name="flyWithoutRc" type="bool" value="true"/>
+  <entry name="landedState" type="bool" value="false"/>
+  <group name="man">
+    <entry name="attScale" type="float" value="0.2500"/>
+    <entry name="flip" type="bool" value="false"/>
+    <entry name="rcMode0" type="uint8" value="1"/>
+    <entry name="rcMode1" type="uint8" value="2"/>
+    <entry name="rcMode2" type="uint8" value="4"/>
+    <entry name="velScale" type="float" value="5.0000"/>
+    <entry name="vzScale" type="float" value="5.0000"/>
+    <entry name="yawScale" type="float" value="3.0000"/>
+  </group>
+  <entry name="maxTakeoffAng" type="float" value="30.0000"/>
+  <entry name="minPwm" type="float" value="0.0625"/>
+  <entry name="motorCheckTime" type="uint8" value="10"/>
+  <entry name="offHeight" type="uint32" value="300"/>
+  <group name="optFlow">
+    <entry name="bandwidth" type="float" value="1.5000"/>
+    <entry name="maxHeight" type="float" value="8.0000"/>
+    <entry name="scale" type="float" value="0.0480"/>
+  </group>
+  <entry name="overturnThr" type="float" value="0.0000"/>
+  <group name="pos">
+    <entry name="aMax" type="float" value="2.0000"/>
+    <entry name="attFb" type="float" value="0.0000"/>
+    <entry name="decK" type="float" value="0.0100"/>
+    <entry name="decReg" type="float" value="500.0000"/>
+    <entry name="ff0" type="float" value="1.0000"/>
+    <entry name="ff1" type="float" value="0.0000"/>
+    <entry name="ff2" type="float" value="0.0000"/>
+    <entry name="gpsK" type="float" value="1.0000"/>
+    <entry name="gpsT" type="uint16" value="240"/>
+    <entry name="k" type="float" value="1.0000"/>
+    <entry name="magHeading" type="bool" value="false"/>
+    <entry name="maxError" type="float" value="2.0000"/>
+    <entry name="maxIstep" type="float" value="10.0000"/>
+    <entry name="vDesc" type="float" value="2.0000"/>
+    <entry name="vDown" type="float" value="5.0000"/>
+    <entry name="vLanding" type="float" value="1.0000"/>
+    <entry name="vMax" type="float" value="10.0000"/>
+    <entry name="vTakeoff" type="float" value="2.0000"/>
+    <entry name="vUp" type="float" value="5.0000"/>
+  </group>
+  <entry name="shockAccel" type="float" value="2.0000"/>
+  <entry name="stallRpm" type="uint16" value="5000"/>
+  <entry name="startRpmMax" type="uint16" value="3500"/>
+  <entry name="startRpmMin" type="uint16" value="2000"/>
+  <entry name="startRpmSigma" type="uint16" value="100"/>
+  <group name="thrLimit">
+    <entry name="thr0" type="float" value="0.9300"/>
+    <entry name="thr1" type="float" value="0.7500"/>
+    <entry name="v0" type="float" value="18.0000"/>
+    <entry name="v1" type="float" value="24.0000"/>
+  </group>
+  <entry name="throttleMode" type="uint8" value="1"/>
+  <entry name="touchTimeout" type="uint32" value="500"/>
+  <entry name="windScaleAtt" type="float" value="49.0000"/>
+  <entry name="windScaleCtl" type="float" value="52.0000"/>
+  <entry name="windThreshold" type="float" value="5.0000"/>
+  <group name="xyRate">
+    <entry name="b0" type="float" value="655.0000"/>
+    <entry name="b1" type="float" value="18.0000"/>
+    <entry name="ki" type="float" value="15.0000"/>
+    <entry name="kp" type="float" value="0.1250"/>
+    <entry name="minRpm" type="uint32" value="1000"/>
+    <entry name="rateK" type="float" value="1.0000"/>
+    <entry name="rateLim" type="float" value="2.0000"/>
+    <entry name="test" type="float" value="0.0000"/>
+    <entry name="type" type="uint8" value="0"/>
+    <entry name="wc" type="float" value="14.0000"/>
+    <entry name="wo" type="float" value="50.0000"/>
+  </group>
+  <group name="zRate">
+    <entry name="kp" type="float" value="4.0000"/>
+    <entry name="p" type="float" value="1.0000"/>
+    <entry name="wc" type="float" value="5.0000"/>
+  </group>
+</config>

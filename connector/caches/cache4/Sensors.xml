@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config name="Sensors">
+  <group name="accel">
+    <entry name="samples" type="uint16" value="256"/>
+    <entry name="threshold" type="float" value="0.0500"/>
+  </group>
+  <group name="airspeed">
+    <entry name="enabled" type="bool" value="false"/>
+    <entry name="pitotMax" type="float" value="40.0000"/>
+    <entry name="pitotMin" type="float" value="-5.0000"/>
+    <entry name="scale" type="float" value="1.0000"/>
+    <entry name="temperature" type="int8" value="0"/>
+  </group>
+  <group name="gyro">
+    <entry name="calibrate" type="bool" value="true"/>
+    <entry name="delay" type="uint32" value="60000"/>
+    <entry name="samples" type="uint16" value="1024"/>
+    <entry name="threshold" type="float" value="0.1000"/>
+    <entry name="tolerance" type="float" value="0.0080"/>
+    <entry name="variance" type="float" value="0.0001"/>
+  </group>
+  <group name="mag">
+    <entry name="count" type="uint8" value="1"/>
+    <entry name="tolerance" type="float" value="1.0000"/>
+  </group>
+  <group name="ns">
+    <entry name="autoselect" type="bool" value="true"/>
+  </group>
+  <group name="pressure">
+    <entry name="delay" type="uint32" value="10000"/>
+    <entry name="filtering" type="bool" value="false"/>
+    <entry name="samples" type="uint16" value="256"/>
+  </group>
+  <group name="rates">
+    <entry name="accel" type="uint16" value="250"/>
+    <entry name="baro" type="uint16" value="50"/>
+    <entry name="compass" type="uint16" value="100"/>
+    <entry name="gps" type="uint16" value="5"/>
+    <entry name="gyro" type="uint16" value="250"/>
+    <entry name="ppm" type="uint16" value="50"/>
+  </group>
+</config>

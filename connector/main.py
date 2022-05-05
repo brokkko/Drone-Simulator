@@ -30,6 +30,7 @@ def createDrones(vel_m_c, targets: []) -> []:
 
 def main():
     async def server(websocket, path):
+        number = 0
         while True:
             timeStamp1 = time.time_ns() // 1000000
             for drone in drones:
@@ -40,28 +41,29 @@ def main():
             for i in drones:
                 data.append(f'{i.state.position.x} {i.state.position.z} {i.state.position.y + 5} {int(i.connected)}')
             data = '|'.join(data)
+            print(number, ": ", data)
+            number += 1
 
             await websocket.send(data)
 
-            await asyncio.sleep(1.0 / 60)
+            # await asyncio.sleep(1.0 / 60)
 
             for drone in drones:
-                #print(drone.state.position)
                 new_velocity = physics.construct_velocity_vector(drone)
                 # преобразовали
                 #print(new_velocity)
                 drone.velocity = new_velocity
             # print("---------------------------------")
             timeStamp2 = time.time_ns() // 1000000
-            # if timeStamp2-timeStamp1 >= 0:
-            #     await asyncio.sleep(1/60 - (timeStamp2-timeStamp1)/1000)
+            if timeStamp2-timeStamp1 >= 0:
+                await asyncio.sleep(1.0/60 - (timeStamp2-timeStamp1)/1000)
 
 # ---------------------------------------------------main------------------------------------------
 #     if len(DroneConnector.occupiedPorts) > 0:
 #         return
 
     vel_m_c = 1
-    targets = [Vector(0, 20, 50)]#, Vector(0, 40, 50), Vector(0, 60, 50), Vector(0, 80, 50), Vector(0, 100, 50)]
+    targets = [Vector(0, 20, 50), Vector(0, 40, 50), Vector(0, 60, 50)] #, Vector(0, 80, 50), Vector(0, 100, 50)]
     drones = createDrones(vel_m_c, targets)
     lat0, lon0, alt0 = ConnectService.connectDrones(drones)
     physics = DronePhysics()

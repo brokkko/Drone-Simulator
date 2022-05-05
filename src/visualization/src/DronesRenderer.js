@@ -17,7 +17,6 @@ class DronesRenderer{
 
 
     updatePositions(coordinates){
-        console.log("update us")
         for (let i of coordinates){
             i.pos.multiplyScalar(1/5)
         }

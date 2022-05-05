@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import * as THREE from "three";
 import {OrbitControls} from "three/examples/jsm/controls/OrbitControls";
-
+import Controller from  "./Controller"
 import DronesRenderer from "./DronesRenderer";
 import parseData from "./ParseData";
 
@@ -10,11 +10,6 @@ class Scene extends Component {
     constructor(props) {
         super(props);
         this.init();
-        this.socket = props.Socket
-        this.socket.onmessage = this.socketOnMessage
-        //this.socket.onmessage = (e) => (console.log(e))
-
-        // this.keyboardState = '0'
         this.controls = new OrbitControls(this.camera, this.renderer.domElement)
         this.controls.enableDamping = true
         this.controls.maxPolarAngle = Math.PI/2
@@ -23,27 +18,26 @@ class Scene extends Component {
 
         this.dronesRenderer = new DronesRenderer(this.scene)
 
-
+        this.number = 0
         this.startAnimation()
-        // document.onkeydown = this.onKeyPressed
-        // document.onkeyup = this.onKeyReleased
 
     }
 
-    // onKeyPressed = (e) => {
-    //     if(e.key === 'w' || e.key === 'a' || e.key === 's' || e.key === 'd' || e.key === 'q')
-    //         this.keyboardState = e.key;
-    // }
-    //
-    // onKeyReleased = (e) => {
-    //     this.keyboardState = '0';
-    // }
+    toConnect = () => {
+        this.socket = new WebSocket("ws://127.0.0.1:8765");
+
+        this.socket.onopen = function(e) {
+            console.log('connected')
+        };
+
+        this.socket.onmessage = this.socketOnMessage
+    }
 
     socketOnMessage = (event) =>{
         let positions = parseData(event.data)
         this.dronesRenderer.updatePositions(positions)
-        // console.log("get it!!")
-        // this.socket.send(this.keyboardState)
+        console.log(this.number + ": " + event.data);
+        this.number++;
     }
 
     startAnimation = () =>{
@@ -58,14 +52,9 @@ class Scene extends Component {
         let controls = this.controls
 
         function tick() {
-            // chair.animate()
             renderer.render( scene, camera );
             controls.update()
-
-
-
             window.requestAnimationFrame(tick)
-
         }
 
         this.animationID = window.requestAnimationFrame(tick)
@@ -147,12 +136,15 @@ class Scene extends Component {
     }
 
     componentDidMount() {
-        this.mount.appendChild(this.renderer.domElement); // mount a scene inside of React using a ref
+        this.mount.appendChild(this.renderer.domElement);
     }
 
     render() {
         return(
             <div ref={ref => (this.mount = ref)}>
+
+                <Controller toConnect = {this.toConnect}
+                />
 
             </div>
 

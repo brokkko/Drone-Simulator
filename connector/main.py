@@ -41,19 +41,17 @@ def main():
             for i in drones:
                 data.append(f'{i.state.position.x} {i.state.position.z} {i.state.position.y + 5} {int(i.connected)}')
             data = '|'.join(data)
-            print(number, ": ", data)
             number += 1
 
             await websocket.send(data)
 
-            # await asyncio.sleep(1.0 / 60)
+            drone_id = await websocket.recv()
+            if drone_id != "-1" and len(drones) < drone_id + 2:
+                drones[int(drone_id)].connected = not drones[int(drone_id)].connected
 
             for drone in drones:
                 new_velocity = physics.construct_velocity_vector(drone)
-                # преобразовали
-                #print(new_velocity)
                 drone.velocity = new_velocity
-            # print("---------------------------------")
             timeStamp2 = time.time_ns() // 1000000
             if timeStamp2-timeStamp1 >= 0:
                 await asyncio.sleep(1.0/60 - (timeStamp2-timeStamp1)/1000)
@@ -63,7 +61,7 @@ def main():
 #         return
 
     vel_m_c = 1
-    targets = [Vector(0, 20, 50), Vector(0, 40, 50), Vector(0, 60, 50)] #, Vector(0, 80, 50), Vector(0, 100, 50)]
+    targets = [Vector(0, 20, 50), Vector(0, 40, 50)] #, Vector(0, 60, 50)] #, Vector(0, 80, 50), Vector(0, 100, 50)]
     drones = createDrones(vel_m_c, targets)
     lat0, lon0, alt0 = ConnectService.connectDrones(drones)
     physics = DronePhysics()

@@ -1,0 +1,27 @@
+.Controller{
+    margin: 0 0 0 0;
+    position: absolute;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    padding-left: 0.5rem;
+    padding-right: 0.5rem;
+    right: 0;
+    display: flex;
+    width: fit-content;
+    min-height: 20%;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 1rem;
+    flex-direction: column;
+    background: rgba(100,100,100,0.3);
+}
+
+.button{
+    border: 0;
+    width: 4rem;
+    height: 2rem;
+}
+.connectButton{
+    width: 5rem;
+    height: 2rem;
+}

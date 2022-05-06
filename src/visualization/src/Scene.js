@@ -21,6 +21,10 @@ class Scene extends Component {
         this.number = 0
         this.startAnimation()
 
+        // ---- flags ----
+        this.isConnected = false
+        this.changedConnectionID = -1
+
     }
 
     toConnect = () => {
@@ -36,8 +40,9 @@ class Scene extends Component {
     socketOnMessage = (event) =>{
         let positions = parseData(event.data)
         this.dronesRenderer.updatePositions(positions)
-        console.log(this.number + ": " + event.data);
         this.number++;
+        this.socket.send(this.changedConnectionID)
+        this.changedConnectionID = -1
     }
 
     startAnimation = () =>{
@@ -139,11 +144,17 @@ class Scene extends Component {
         this.mount.appendChild(this.renderer.domElement);
     }
 
+    onPushButton = (id) =>{
+        if(this.isConnected) {
+            this.changedConnectionID = id
+        }
+    }
+
     render() {
         return(
             <div ref={ref => (this.mount = ref)}>
-
                 <Controller toConnect = {this.toConnect}
+                            onPushButton = {this.onPushButton}
                 />
 
             </div>

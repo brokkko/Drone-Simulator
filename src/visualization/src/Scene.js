@@ -29,9 +29,10 @@ class Scene extends Component {
 
     toConnect = () => {
         this.socket = new WebSocket("ws://127.0.0.1:8765");
-
+        let obj = this
         this.socket.onopen = function(e) {
             console.log('connected')
+            obj.isConnected = true
         };
 
         this.socket.onmessage = this.socketOnMessage

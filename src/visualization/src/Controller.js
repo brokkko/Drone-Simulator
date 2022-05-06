@@ -24,9 +24,30 @@ class Controller extends Component{
     }
 
     render() {
+
+        let buttonNum = 6
+        let buttons = []
+
+        for(let i = 1; i<buttonNum; i++){
+            buttons.push(<input
+                style = {{backgroundColor: this.state.states[i] === 0 ? this.disconnectedColor : this.connectedColor}}
+                className="button"
+                type='button'
+                onClick={() => this.onPushButton(i)}
+                value={"Drone " + i}/>);
+        }
+
         return(
             <div>
-                <input type='button' onClick={this.toConnect} value="CONNECT"/>
+                <div className="Controller">
+                    {buttons}
+                    <input
+                        style = {{backgroundColor: this.state.states[0] === 0 ? this.disconnectedColor : this.connectedColor}}
+                        className="connectButton"
+                        type='button'
+                        onClick={this.toConnect}
+                        value="CONNECT"/>
+                </div>
             </div>
         )
     }

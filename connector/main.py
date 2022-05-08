@@ -19,7 +19,7 @@ def addNeighbors(drones):
 
 def createDrones(vel_m_c, targets: []) -> []:
     drones = []
-    safe_radius = 15
+    safe_radius = 20
     drone_id = 1
     for target in targets:
         drones.append(Drone(vel_m_c, target, drone_id, safe_radius, True))
@@ -45,8 +45,10 @@ def main():
 
             await websocket.send(data)
 
-            drone_id = await websocket.recv()
-            if drone_id != "-1" and len(drones) < drone_id + 2:
+            drone_id = int(await websocket.recv())
+            if drone_id != -1:
+                print(f"change{drone_id}")
+            if drone_id != -1 and len(drones) >= drone_id + 1:
                 drones[int(drone_id)].connected = not drones[int(drone_id)].connected
 
             for drone in drones:
@@ -61,7 +63,7 @@ def main():
 #         return
 
     vel_m_c = 1
-    targets = [Vector(0, 20, 50), Vector(0, 40, 50)] #, Vector(0, 60, 50)] #, Vector(0, 80, 50), Vector(0, 100, 50)]
+    targets = [Vector(30, 60, 50), Vector(0, 40, 50), Vector(-30, 20, 50), Vector(0, 80, 50), Vector(0, 100, 50)]
     drones = createDrones(vel_m_c, targets)
     lat0, lon0, alt0 = ConnectService.connectDrones(drones)
     physics = DronePhysics()

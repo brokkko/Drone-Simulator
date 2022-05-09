@@ -62,8 +62,8 @@ def main():
                 new_velocity = physics.construct_velocity_vector(drone)
                 drone.velocity = new_velocity
             timeStamp2 = time.time_ns() // 1000000
-            if timeStamp2-timeStamp1 >= 0:
-                await asyncio.sleep(1.0/60 - (timeStamp2-timeStamp1)/1000)
+            if timeStamp2 - timeStamp1 >= 0:
+                await asyncio.sleep(1.0 / 60 - (timeStamp2 - timeStamp1) / 1000)
 
     # ---------------------------------------------------main------------------------------------------
 
@@ -88,7 +88,12 @@ def main():
     time.sleep(len(positionsList1))
 
     vel_m_c = 1
-    targets = [Vector(30, 60, 50), Vector(0, 40, 50), Vector(-30, 20, 50), Vector(0, 80, 50), Vector(0, 100, 50)]
+    # targets = [Vector(0, 6, 25), Vector(0, 6, 25), Vector(0, 6, 25),
+    #            Vector(6, 0, 25), Vector(6, 0, 25), Vector(6, 0, 25)]
+
+    targets = [Vector(0, -600, 25), Vector(0, -600, 25), Vector(0, -600, 25),
+               Vector(0, 600, 25), Vector(0, 600, 25), Vector(0, 600, 25)]
+
     drones = createDrones(vel_m_c, targets)
     lat0, lon0, alt0 = ConnectService.connectDrones(drones)
 
@@ -104,4 +109,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

@@ -26,7 +26,7 @@ class Drone:
     def velocity(self, newVel: Vector):
         newVel *= 100
         newVel.setXYZ(int(newVel.x), int(newVel.y), int(newVel.z))
-        self.uav.control.go_manual_22mode(newVel.y, newVel.x, -newVel.z, 0, 1000) # n e d
+        self.uav.control.go_manual_22mode(newVel.y, newVel.x, -newVel.z, 0, 1000)  # n e d
         # TODO: clamp values min(clamp_max, max(clamp_min, value))
         self._velocity = newVel
 
@@ -39,6 +39,9 @@ class Drone:
 
     def connect(self):
         self.uav.connect()
+
+    def blastOff(self):
+        self.uav.control.go_manual_22mode(0, 0, -1000, 0, 5000)
 
     def __eq__(self, other):
         if other.target is None or other.state is None or other.neighbors is None:

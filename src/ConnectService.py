@@ -9,16 +9,16 @@ class ConnectService:
     def connectDrones(drones: []) -> Vector:
         for drone in drones:
             drone.connect()
-        time.sleep(3)
+        time.sleep(10)
         print("connected")
 
         for drone in drones:
             drone.uav.control.preflight()
-        time.sleep(1)
+        time.sleep(9)
         print("preflighted")
         for drone in drones:
             drone.uav.control.takeoff()
-        time.sleep(13)
+        time.sleep(18)
 
         print("took off")
         lat0, lon0, alt0 = drones[0].getLLA()

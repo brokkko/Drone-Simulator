@@ -1745,7 +1745,7 @@ class Hub:
                 self.mutex.release()
 
                 loadedFromCache = False
-                print(f'cache is ----{self.cache}')
+
                 if self.cache is not None:
                     try:
                         cachedDescriptionName = os.path.join(self.cache, self.components[i].uid() + '.json')
@@ -1753,7 +1753,6 @@ class Hub:
                             descriptionData = js_fd.read() 
                         description = json.loads(descriptionData.decode())
                         verbose('\tComponent info loaded from cache')
-                        print('[message] Component info loaded from cache')
                         self.components[i].loadComponentDescription(description)
                         loadedFromCache = True
                     except:

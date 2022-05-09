@@ -6,7 +6,7 @@ from src.DroneConnector import DroneConnector
 
 
 class Drone:
-    def __init__(self, vel_m_c: int, target: Vector, drone_id: int, safe_radius: int, connected: bool):
+    def __init__(self, vel_m_c: int, target: Vector, drone_id: int, safe_radius: float, connected: bool):
         self.uav = DroneConnector()
         self.start_position = Vector()
         self._velocity = Vector()

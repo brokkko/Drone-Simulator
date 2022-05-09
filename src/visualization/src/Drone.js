@@ -3,7 +3,7 @@ import * as THREE from "three";
 class Drone extends THREE.Mesh{
     constructor(pos) {
 
-        let radius = 0.5;
+        let radius = 0.25/2;
         let widthSegments = 32;
         let heightSegments = 16;
         let color = 0xffff00;

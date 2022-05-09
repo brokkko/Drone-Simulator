@@ -1,8 +1,5 @@
 import docker
-
-import os
 import configparser
-
 from typing import List
 
 
@@ -31,8 +28,4 @@ def runDocker(latlonList: List[tuple]) -> None:
         env = [f'LAT={latlon[0]}', f'LON={latlon[1]}']
         name = image + str(i)
         client.containers.run(image, "./start.sh", ports=port, volumes=mount, environment=env, tty=True, auto_remove=True, name=name, detach= True)
-        print('hi')
 
-
-if __name__ == '__main__':
-    runDocker([('59.99234113142696', '30.280999708037204')])

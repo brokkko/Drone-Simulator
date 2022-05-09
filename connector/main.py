@@ -8,6 +8,7 @@ from src.DronePhysics import DronePhysics
 from src.Vector import Vector
 from src.ConnectService import ConnectService
 from src.СonvertService import ConvertService
+from src.DockerService.DockerService import runDocker
 
 
 def addNeighbors(drones):
@@ -19,13 +20,19 @@ def addNeighbors(drones):
 
 def createDrones(vel_m_c, targets: []) -> []:
     drones = []
-    safe_radius = 20
+    safe_radius = 5
     drone_id = 1
     for target in targets:
         drones.append(Drone(vel_m_c, target, drone_id, safe_radius, True))
         drone_id += 1
     addNeighbors(drones)
     return drones
+
+
+def climb(drones: []):
+    for drone in drones:
+        drone.blastOff()
+    time.sleep(6)
 
 
 def main():
@@ -58,14 +65,34 @@ def main():
             if timeStamp2-timeStamp1 >= 0:
                 await asyncio.sleep(1.0/60 - (timeStamp2-timeStamp1)/1000)
 
-# ---------------------------------------------------main------------------------------------------
-#     if len(DroneConnector.occupiedPorts) > 0:
-#         return
+    # ---------------------------------------------------main------------------------------------------
+
+    positionsList1 = [(59.86805732560133, 30.56717405661705), (59.86805732560371, 30.567188808769522),
+                      (59.868057325604035, 30.567201549263782), (59.867993559987376, 30.56718404313254),
+                      (59.867992213527096, 30.56719879526668), (59.86799288676702, 30.567170632097273)]
+
+
+    positionsList2 = [(59.8680117073538, 30.5672497622265), (59.8680117073538, 30.5672497622265),
+                      (59.86801170735036, 30.567263173261424), (59.868011707346014, 30.56727658429701)]
+
+    positionsList3 = [(59.86805109104228, 30.56719410639538), (59.86804301233604, 30.567192765297996),
+                      (59.868036616695086, 30.567194106408866), (59.868042675726386, 30.567204835241206)]
+
+    positionsList5 = [(59.8680204711637, 30.56717621212066), (59.86802754003335, 30.56719163482928),
+                      (59.86801306567738, 30.567192975922822), (59.868019461323115, 30.56719163482339)]
+
+    for i in positionsList1:
+        print(ConvertService.geodetic2enu(i[0], i[1], 25, positionsList1[0][0], positionsList1[0][1], 0))
+    # --- run Docker images ---
+    runDocker(positionsList1)
+    time.sleep(len(positionsList1))
 
     vel_m_c = 1
     targets = [Vector(30, 60, 50), Vector(0, 40, 50), Vector(-30, 20, 50), Vector(0, 80, 50), Vector(0, 100, 50)]
     drones = createDrones(vel_m_c, targets)
     lat0, lon0, alt0 = ConnectService.connectDrones(drones)
+
+    climb(drones)
     physics = DronePhysics()
 
     start_server = websockets.serve(server, 'localhost', 8765)

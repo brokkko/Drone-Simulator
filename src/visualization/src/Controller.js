@@ -20,7 +20,6 @@ class Controller extends Component{
         this.props.onPushButton(id-1)
         this.states[id] = (this.states[id] === 0 ? 1 : 0);
         this.setState({states: this.states})
-        console.log(this.states[id])
     }
 
     render() {

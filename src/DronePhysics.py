@@ -4,16 +4,18 @@ from src.Vector import Vector
 
 class DronePhysics:
     def __init__(self):
-        self.k1 = 5.0
+        self.k1 = 2.0
         self.k2 = 1.0
-        self.k3 = 2.0
+        self.k3 = 3.0
 
     def construct_velocity_vector(self, drone: Drone) -> Vector:
-        if drone.connected is False:
+        if drone.connected == 0 or drone.connected == 2:
             return Vector()
 
-        if drone.state.position.distance_to(drone.target) <= 5:
-            return Vector(0, 0, 0)
+        if drone.state.position.distance_to(drone.target) <= 1 and drone.connected:
+            print(f'drone {drone.id} reached')
+            drone.connected = 2
+            return Vector()
 
         # вектор достижения цели
         V_goal: Vector = self.k1 * (drone.target - drone.state.position) / (drone.target - drone.state.position).length()

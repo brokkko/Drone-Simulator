@@ -20,7 +20,7 @@ def addNeighbors(drones):
 
 def createDrones(vel_m_c, targets: []) -> []:
     drones = []
-    safe_radius = 5
+    safe_radius = 0.7
     drone_id = 1
     for target in targets:
         drones.append(Drone(vel_m_c, target, drone_id, safe_radius, True))
@@ -68,9 +68,10 @@ def main():
     # ---------------------------------------------------main------------------------------------------
 
     positionsList1 = [(59.86805732560133, 30.56717405661705), (59.86805732560371, 30.567188808769522),
-                      (59.868057325604035, 30.567201549263782), (59.867993559987376, 30.56718404313254),
-                      (59.867992213527096, 30.56719879526668), (59.86799288676702, 30.567170632097273)]
+                       (59.868057325604035, 30.567201549263782), (59.867993559987376, 30.56718404313254),
+                       (59.867992213527096, 30.56719879526668), (59.86799288676702, 30.567170632097273)]
 
+    positionListDou = [(59.86805732560133, 30.56717405661705), (59.867993559987376, 30.56718404313254)]
 
     positionsList2 = [(59.8680117073538, 30.5672497622265), (59.8680117073538, 30.5672497622265),
                       (59.86801170735036, 30.567263173261424), (59.868011707346014, 30.56727658429701)]
@@ -85,14 +86,14 @@ def main():
         print(ConvertService.geodetic2enu(i[0], i[1], 25, positionsList1[0][0], positionsList1[0][1], 0))
     # --- run Docker images ---
     runDocker(positionsList1)
-    time.sleep(len(positionsList1))
+    time.sleep(7) # нужно подождать, пока контейнеры разгрузятся
 
     vel_m_c = 1
     # targets = [Vector(0, 6, 25), Vector(0, 6, 25), Vector(0, 6, 25),
     #            Vector(6, 0, 25), Vector(6, 0, 25), Vector(6, 0, 25)]
 
-    targets = [Vector(0, -600, 25), Vector(0, -600, 25), Vector(0, -600, 25),
-               Vector(0, 600, 25), Vector(0, 600, 25), Vector(0, 600, 25)]
+    targets = [Vector(-3, -10, 25), Vector(0, -10, 25), Vector(3, -10, 25),
+               Vector(-3, 10, 25), Vector(0, 10, 25), Vector(3, 10, 25)]
 
     drones = createDrones(vel_m_c, targets)
     lat0, lon0, alt0 = ConnectService.connectDrones(drones)

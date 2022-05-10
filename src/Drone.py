@@ -16,7 +16,8 @@ class Drone:
         self.neighbors = []
         self.id = drone_id
         self.safe_radius = safe_radius
-        self.connected = connected
+        self.connected = connected # 0 - Disconnected,  1 - on the way,  2 - reached
+
 
     @property
     def velocity(self):

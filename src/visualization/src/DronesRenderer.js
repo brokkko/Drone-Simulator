@@ -28,6 +28,7 @@ class DronesRenderer{
 
         for(let index in coordinates){ // update
             this.drones[index].position.copy(coordinates[index].pos)
+            console.log(coordinates[index].connected)
             this.drones[index].setColor(coordinates[index].connected);
         }
 

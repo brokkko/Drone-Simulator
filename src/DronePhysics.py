@@ -6,9 +6,29 @@ class DronePhysics:
     def __init__(self):
         self.k1 = 2.0
         self.k2 = 1.0
-        self.k3 = 3.0
+        self.k3 = 1.0
+        self.h = 0.08
+
+    def localK3(self, drone1: Drone, drone2: Drone):
+        distBefore = drone1.state.position.distance_to(drone2.state.position)
+        drone1After = drone1.state.position + self.h * drone1.velocity
+        drone2After = drone2.state.position + self.h * drone2.velocity
+        distAfter = drone1After.distance_to(drone2After)
+
+        if distBefore - distAfter <= 0:
+            return 0
+
+        return (drone1.safe_radius / distBefore) \
+               * ((distBefore - distAfter) / (self.h * (drone1.velocity + drone2.velocity).length()))
+
+    def countK3(self, drone: Drone):
+        values = []
+        for neighbor in drone.neighbors:
+            values.append(self.localK3(drone, neighbor))
+        return max(values)
 
     def construct_velocity_vector(self, drone: Drone) -> Vector:
+
         if drone.connected == 0 or drone.connected == 2:
             return Vector()
 
@@ -16,6 +36,9 @@ class DronePhysics:
             print(f'drone {drone.id} reached')
             drone.connected = 2
             return Vector()
+
+        k3 = self.countK3(drone) * 0.7 * self.k3
+        print(k3)
 
         # вектор достижения цели
         V_goal: Vector = self.k1 * (drone.target - drone.state.position) / (drone.target - drone.state.position).length()
@@ -31,7 +54,7 @@ class DronePhysics:
                 arg_goal = (neighbour.state.position - drone.state.position) \
                            / (neighbour.state.position - drone.state.position).length()
 
-                r_dist = -self.k3 * ((2 - arg1) * (2 - arg1)) * arg_goal
+                r_dist = -k3 * ((2 - arg1) * (2 - arg1)) * arg_goal
                 V_close += r_dist
 
             sum += 1

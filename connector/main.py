@@ -20,7 +20,7 @@ def addNeighbors(drones):
 
 def createDrones(vel_m_c, targets: []) -> []:
     drones = []
-    safe_radius = 0.7
+    safe_radius = 4
     drone_id = 1
     for target in targets:
         drones.append(Drone(vel_m_c, target, drone_id, safe_radius, True))
@@ -56,7 +56,8 @@ def main():
             if drone_id != -1:
                 print(f"change{drone_id}")
             if drone_id != -1 and len(drones) >= drone_id + 1:
-                drones[int(drone_id)].connected = not drones[int(drone_id)].connected
+                if drones[int(drone_id)].connected != 2:
+                    drones[int(drone_id)].connected = not drones[int(drone_id)].connected
 
             for drone in drones:
                 new_velocity = physics.construct_velocity_vector(drone)
@@ -71,10 +72,16 @@ def main():
                        (59.868057325604035, 30.567201549263782), (59.867993559987376, 30.56718404313254),
                        (59.867992213527096, 30.56719879526668), (59.86799288676702, 30.567170632097273)]
 
+    targets1 = [Vector(-3, -10, 25), Vector(0, -10, 25), Vector(3, -10, 25),
+               Vector(-3, 10, 25), Vector(0, 10, 25), Vector(3, 10, 25)]
+
+
     positionListDou = [(59.86805732560133, 30.56717405661705), (59.867993559987376, 30.56718404313254)]
 
-    positionsList2 = [(59.8680117073538, 30.5672497622265), (59.8680117073538, 30.5672497622265),
+    positionsList2 = [(59.868012717193984, 30.567235680640323), (59.8680117073538, 30.5672497622265),
                       (59.86801170735036, 30.567263173261424), (59.868011707346014, 30.56727658429701)]
+
+    targets2 = [Vector(60, 0, 25), Vector(61, 0, 25), Vector(62, 0, 25), Vector(63, 0, 25)]
 
     positionsList3 = [(59.86805109104228, 30.56719410639538), (59.86804301233604, 30.567192765297996),
                       (59.868036616695086, 30.567194106408866), (59.868042675726386, 30.567204835241206)]
@@ -82,20 +89,14 @@ def main():
     positionsList5 = [(59.8680204711637, 30.56717621212066), (59.86802754003335, 30.56719163482928),
                       (59.86801306567738, 30.567192975922822), (59.868019461323115, 30.56719163482339)]
 
-    for i in positionsList1:
-        print(ConvertService.geodetic2enu(i[0], i[1], 25, positionsList1[0][0], positionsList1[0][1], 0))
+    for i in positionsList2:
+        print(ConvertService.geodetic2enu(i[0], i[1], 25, positionsList2[0][0], positionsList2[0][1], 0))
     # --- run Docker images ---
-    runDocker(positionsList1)
-    time.sleep(7) # нужно подождать, пока контейнеры разгрузятся
+    runDocker(positionsList2)
+    time.sleep(10) # нужно подождать, пока контейнеры разгрузятся
 
     vel_m_c = 1
-    # targets = [Vector(0, 6, 25), Vector(0, 6, 25), Vector(0, 6, 25),
-    #            Vector(6, 0, 25), Vector(6, 0, 25), Vector(6, 0, 25)]
-
-    targets = [Vector(-3, -10, 25), Vector(0, -10, 25), Vector(3, -10, 25),
-               Vector(-3, 10, 25), Vector(0, 10, 25), Vector(3, 10, 25)]
-
-    drones = createDrones(vel_m_c, targets)
+    drones = createDrones(vel_m_c, targets2)
     lat0, lon0, alt0 = ConnectService.connectDrones(drones)
 
     climb(drones)

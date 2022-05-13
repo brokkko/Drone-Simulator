@@ -41,7 +41,8 @@ class DronePhysics:
         print(k3)
 
         # вектор достижения цели
-        V_goal: Vector = self.k1 * (drone.target - drone.state.position) / (drone.target - drone.state.position).length()
+        V_goal: Vector = self.k1 * (drone.target - drone.state.position) / (
+                drone.target - drone.state.position).length()
 
         # вектор отталкивания
         V_close: Vector = Vector(0, 0, 0)
@@ -70,4 +71,3 @@ class DronePhysics:
             V_close = Vector(0, 0, 0)
 
         return V_goal + V_close + V_center
-

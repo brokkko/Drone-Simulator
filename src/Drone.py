@@ -18,7 +18,6 @@ class Drone:
         self.safe_radius = safe_radius
         self.connected = connected # 0 - Disconnected,  1 - on the way,  2 - reached
 
-
     @property
     def velocity(self):
         return self._velocity

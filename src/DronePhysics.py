@@ -6,7 +6,7 @@ class DronePhysics:
     def __init__(self):
         self.k1 = 2.0
         self.k2 = 1.0
-        self.k3 = 1.0
+        self.k3 = 3.0
         self.h = 0.08
         
     def quadraticDependence(self, k: float) -> float:
@@ -21,12 +21,19 @@ class DronePhysics:
         if distBefore - distAfter <= 0:
             return 0
 
-        return (drone1.safe_radius / distBefore) \
-               * ((distBefore - distAfter) / (self.h * (drone1.velocity + drone2.velocity).length()))
+        dist = (distBefore / drone1.safe_radius)
+        distA = (drone1.safe_radius / distBefore)
+        speed = ((distBefore - distAfter) / (self.h * (drone1.velocity + drone2.velocity).length()))
+        quadro = self.quadraticDependence(dist)
+        k = quadro*speed
+
+        print(f'{drone1.id} dist = {dist}  speed = {speed}  quadro = {quadro}  k = {k}')
+
+        return k
 
     def countK3(self, drone: Drone):
         values = []
-        for neighbor in drone.neighbors:
+        for neighbor in drone.neighbors: # TODO: check safe radius
             values.append(self.localK3(drone, neighbor))
         return max(values)
 

@@ -8,6 +8,9 @@ class DronePhysics:
         self.k2 = 1.0
         self.k3 = 1.0
         self.h = 0.08
+        
+    def quadraticDependence(self, k: float) -> float:
+        return k*k - 2*k + 1
 
     def localK3(self, drone1: Drone, drone2: Drone):
         distBefore = drone1.state.position.distance_to(drone2.state.position)
@@ -37,8 +40,9 @@ class DronePhysics:
             drone.connected = 2
             return Vector()
 
-        k3 = self.countK3(drone) * 0.7 * self.k3
-        print(k3)
+        k3 = self.countK3(drone) * self.k3
+        print("RESULT >>>> ", k3)
+        print("\n")
 
         # вектор достижения цели
         V_goal: Vector = self.k1 * (drone.target - drone.state.position) / (

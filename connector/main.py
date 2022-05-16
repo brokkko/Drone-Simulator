@@ -20,7 +20,7 @@ def addNeighbors(drones):
 
 def createDrones(vel_m_c, targets: []) -> []:
     drones = []
-    safe_radius = 4
+    safe_radius = 7
     drone_id = 1
     for target in targets:
         drones.append(Drone(vel_m_c, target, drone_id, safe_radius, True))

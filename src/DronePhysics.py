@@ -6,16 +6,16 @@ class DronePhysics:
     def __init__(self):
         self.k1 = 2.0
         self.k2 = 1.0
-        self.k3 = 3.0
-        self.h = 0.08
+        self.k3 = 2.5
+        self.h = 0.01
         
     def quadraticDependence(self, k: float) -> float:
         return k*k - 2*k + 1
 
     def localK3(self, drone1: Drone, drone2: Drone):
         distBefore = drone1.state.position.distance_to(drone2.state.position)
-        drone1After = drone1.state.position + self.h * drone1.velocity
-        drone2After = drone2.state.position + self.h * drone2.velocity
+        drone1After = drone1.state.position + (self.h * drone1.velocity)
+        drone2After = drone2.state.position + (self.h * drone2.velocity)
         distAfter = drone1After.distance_to(drone2After)
 
         if distBefore - distAfter <= 0:

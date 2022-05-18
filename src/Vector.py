@@ -42,6 +42,15 @@ class Vector:
         elif isinstance(other, float) or isinstance(other, int):
             return Vector(self.x / other, self.y / other, self.z / other)
 
+    def __eq__(self, other):
+        if isinstance(other, Vector):
+            return self.x == other.x and self.y == other.y and self.z == other.z
+        elif isinstance(other, float) or isinstance(other, int):
+            return self.x == other and self.y == other and self.z == other
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
     def get_xyz(self):
         return self.x, self.y, self.z
 

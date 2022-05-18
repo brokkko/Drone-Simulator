@@ -24,11 +24,11 @@ class Drone:
 
     @velocity.setter
     def velocity(self, newVel: Vector):
+        self._velocity = newVel.copy()
         newVel *= 50
         newVel.setXYZ(int(newVel.x), int(newVel.y), int(newVel.z))
         self.uav.control.go_manual_22mode(newVel.y, newVel.x, -newVel.z, 0, 1000)  # n e d
         # TODO: clamp values min(clamp_max, max(clamp_min, value))
-        self._velocity = newVel
 
     def getLLA(self) -> Tuple[Union[float, Any], Union[float, Any], Union[float, Any]]:
         lat, lon, alt = int(self.uav.messenger.hub['Ublox']['latitude'].read()[0]), \

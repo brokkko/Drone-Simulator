@@ -21,21 +21,30 @@ class DronePhysics:
         if distBefore - distAfter <= 0:
             return 0
 
-        dist = (distBefore / drone1.safe_radius)
-        distA = (drone1.safe_radius / distBefore)
-        speed = ((distBefore - distAfter) / (self.h * (drone1.velocity + drone2.velocity).length()))
-        quadro = self.quadraticDependence(dist)
-        k = quadro*speed
+        if drone1.velocity != Vector(0, 0, 0) and drone2.velocity != Vector(0, 0, 0):
+            print(f"delta = {distBefore-distAfter}  max = {distBefore}")
+            speed = (distBefore - distAfter) / (self.h*(drone1.velocity.length() + drone2.velocity.length())) # (self.h * (drone1.velocity + drone2.velocity).length())
+        else:
+            speed = 0
 
+        dist = (distBefore / drone1.safe_radius)
+        quadro = self.quadraticDependence(dist)
+        if speed < 0.2:
+            k = quadro
+        else:
+            k = (quadro + speed)/2
+
+        # if drone1.id == 3 or drone1.id == 4:
         print(f'{drone1.id} dist = {dist}  speed = {speed}  quadro = {quadro}  k = {k}')
 
         return k
 
     def countK3(self, drone: Drone):
         values = []
-        for neighbor in drone.neighbors: # TODO: check safe radius
-            values.append(self.localK3(drone, neighbor))
-        return max(values)
+        for neighbor in drone.neighbors:
+            if drone.state.position.distance_to(neighbor.state.position) <= drone.safe_radius:
+                values.append(self.localK3(drone, neighbor))
+        return max(values) if len(values) else 0
 
     def construct_velocity_vector(self, drone: Drone) -> Vector:
 
@@ -48,8 +57,9 @@ class DronePhysics:
             return Vector()
 
         k3 = self.countK3(drone) * self.k3
-        print("RESULT >>>> ", k3)
-        print("\n")
+        if k3 != 0:
+            print("RESULT >>>> ", k3)
+        # print("\n")
 
         # вектор достижения цели
         V_goal: Vector = self.k1 * (drone.target - drone.state.position) / (

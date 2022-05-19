@@ -16,6 +16,7 @@ class Drone:
         self.neighbors = []
         self.id = drone_id
         self.safe_radius = safe_radius
+        self.critical_radius = 0.20 # 20 см
         self.connected = connected # 0 - Disconnected,  1 - on the way,  2 - reached
 
     @property

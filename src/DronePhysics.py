@@ -13,6 +13,9 @@ class DronePhysics:
         return k*k - 2*k + 1
 
     def localK3(self, drone1: Drone, drone2: Drone):
+        if drone1.state.position.distance_to(drone2.state.position) <= drone1.critical_radius:
+            return self.k3
+
         distBefore = drone1.state.position.distance_to(drone2.state.position)
         drone1After = drone1.state.position + (self.h * drone1.velocity)
         drone2After = drone2.state.position + (self.h * drone2.velocity)
@@ -23,7 +26,7 @@ class DronePhysics:
 
         if drone1.velocity != Vector(0, 0, 0) and drone2.velocity != Vector(0, 0, 0):
             print(f"delta = {distBefore-distAfter}  max = {distBefore}")
-            speed = (distBefore - distAfter) / (self.h*(drone1.velocity.length() + drone2.velocity.length())) # (self.h * (drone1.velocity + drone2.velocity).length())
+            speed = (distBefore - distAfter) / (self.h*(drone1.velocity.length() + drone2.velocity.length()))
         else:
             speed = 0
 

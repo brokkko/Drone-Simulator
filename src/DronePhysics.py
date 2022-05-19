@@ -1,5 +1,6 @@
 from src.Drone import Drone
 from src.Vector import Vector
+from typing import Final
 
 
 def quadraticDependence(k: float) -> float:
@@ -59,7 +60,7 @@ class DronePhysics:
 
         if drone.position.distance_to(drone.target) <= self.targetAccuracy and drone.connected:
             print(f'drone {drone.id} reached')
-            drone.connected = 2
+            drone.connected = 2  # status 2 means drone has reached his target
             return Vector()
 
         k3 = self.countK3(drone) * self.k3

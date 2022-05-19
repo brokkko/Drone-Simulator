@@ -1,6 +1,5 @@
 import asyncio
 import time
-
 import websockets
 
 from src.Drone import Drone
@@ -31,7 +30,7 @@ def createDrones(vel_m_c, targets: []) -> []:
 
 def climb(drones: []):
     for drone in drones:
-        drone.blastOff()
+        drone.  blastOff()
     time.sleep(6)
 
 
@@ -70,11 +69,11 @@ def main():
     testNumber = 4
     testPositions, testTargets = getTestData(testNumber)
     # --- run Docker images ---
-    runDocker(positionsList2)
-    time.sleep(10) # нужно подождать, пока контейнеры разгрузятся
+    runDocker(testPositions)
+    time.sleep(10)  # waiting for containers to load
 
     vel_m_c = 1
-    drones = createDrones(vel_m_c, targets2)
+    drones = createDrones(vel_m_c, testTargets)
     lat0, lon0, alt0 = ConnectService.connectDrones(drones)
     climb(drones)
     physics = DronePhysics()

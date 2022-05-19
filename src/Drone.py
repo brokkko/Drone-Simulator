@@ -46,15 +46,5 @@ class Drone:
     def blastOff(self):
         self.uav.control.go_manual_22mode(0, 0, -1000, 0, 5000)
 
-    def __eq__(self, other):
-        if other.target is None or other.state is None or other.neighbors is None:
-            raise Exception('Drone undefined')
-        return self.state == other.state and self.target == other.target and self.neighbors == other.neighbors
-
-    def __ne__(self, other):
-        if other.target is None or other.state is None or other.neighbors is None:
-            raise Exception('Drone undefined')
-        return self.state != other.state or self.target != other.target or self.neighbors != other.neighbors
-
     def __str__(self):
-        return f'Drone {self.id} - {self.state}'
+        return f'Drone {self.id} - {self.position}'

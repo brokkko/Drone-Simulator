@@ -37,16 +37,14 @@ class Controller extends Component{
         }
 
         return(
-            <div>
-                <div className="Controller">
-                    {buttons}
-                    <input
-                        style = {{backgroundColor: this.state.states[0] === 0 ? this.disconnectedColor : this.connectedColor}}
-                        className="connectButton"
-                        type='button'
-                        onClick={this.toConnect}
-                        value="CONNECT"/>
-                </div>
+            <div className="Controller">
+                {buttons}
+                <input
+                    style = {{backgroundColor: this.state.states[0] === 0 ? this.disconnectedColor : this.connectedColor}}
+                    className="connectButton"
+                    type='button'
+                    onClick={this.toConnect}
+                    value="CONNECT"/>
             </div>
         )
     }

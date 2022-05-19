@@ -17,16 +17,12 @@ class DronesRenderer{
 
 
     updatePositions(coordinates){
-        // for (let i of coordinates){
-        //     i.pos.multiplyScalar(1/10)
-        // }
-
-        if(this.drones.length === 0){ // if no drones created yet
+        if(this.drones.length === 0){
             this.fillDronesList(coordinates);
             return;
         }
 
-        for(let index in coordinates){ // update
+        for(let index in coordinates){
             this.drones[index].position.copy(coordinates[index].pos)
             console.log(coordinates[index].connected)
             this.drones[index].setColor(coordinates[index].connected);

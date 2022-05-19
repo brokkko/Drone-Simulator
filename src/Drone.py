@@ -1,35 +1,37 @@
 from typing import Tuple, Union, Any
 
 from src.Vector import Vector
-from src.State import State
 from src.DroneConnector import DroneConnector
 
 
 class Drone:
     def __init__(self, vel_m_c: int, target: Vector, drone_id: int, safe_radius: float, connected: bool):
         self.uav = DroneConnector()
-        self.start_position = Vector()
+        self.startPosition = Vector()
         self._velocity = Vector()
         self.target = target
-        self.maxSpeed = vel_m_c * 1000
-        self.state = State(self.start_position)
+        self.maxSpeed = vel_m_c
+        self.position = Vector()
         self.neighbors = []
         self.id = drone_id
-        self.safe_radius = safe_radius
-        self.critical_radius = 0.20 # 20 см
-        self.connected = connected # 0 - Disconnected,  1 - on the way,  2 - reached
+        self.safeRadius = safe_radius
+        self.critical_radius = 0.20  # 20 см
+        self.connected = connected  # 0 - Disconnected,  1 - on the way,  2 - reached
 
     @property
     def velocity(self):
         return self._velocity
 
     @velocity.setter
-    def velocity(self, newVel: Vector):
-        self._velocity = newVel.copy()
-        newVel *= 50
-        newVel.setXYZ(int(newVel.x), int(newVel.y), int(newVel.z))
-        self.uav.control.go_manual_22mode(newVel.y, newVel.x, -newVel.z, 0, 1000)  # n e d
-        # TODO: clamp values min(clamp_max, max(clamp_min, value))
+    def velocity(self, newVelocity: Vector):
+        if newVelocity.length() > self.maxSpeed:
+            newVelocity = (newVelocity / newVelocity.length()) * self.maxSpeed
+
+        self._velocity = newVelocity.copy()
+        newVelocity *= 50
+        newVelocity.setXYZ(int(newVelocity.x), int(newVelocity.y), int(newVelocity.z))
+
+        self.uav.control.go_manual_22mode(newVelocity.y, newVelocity.x, -newVelocity.z, 0, 1000)
 
     def getLLA(self) -> Tuple[Union[float, Any], Union[float, Any], Union[float, Any]]:
         lat, lon, alt = int(self.uav.messenger.hub['Ublox']['latitude'].read()[0]), \

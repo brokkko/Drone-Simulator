@@ -5,7 +5,6 @@ import Controller from  "./Controller"
 import DronesRenderer from "./DronesRenderer";
 import parseData from "./ParseData";
 
-
 class Scene extends Component {
     constructor(props) {
         super(props);
@@ -15,16 +14,13 @@ class Scene extends Component {
         this.controls.maxPolarAngle = Math.PI/2
         this.controls.minPolarAngle = 0
         this.controls.update()
-
         this.dronesRenderer = new DronesRenderer(this.scene)
-
         this.number = 0
         this.startAnimation()
 
         // ---- flags ----
         this.isConnected = false
         this.changedConnectionID = -1
-
     }
 
     toConnect = () => {
@@ -47,11 +43,9 @@ class Scene extends Component {
     }
 
     startAnimation = () =>{
-
         if(this.animationID){
             window.cancelAnimationFrame(this.animationID)
         }
-
         let scene = this.scene
         let camera = this.camera
         let renderer = this.renderer
@@ -67,8 +61,8 @@ class Scene extends Component {
     }
 
     initLights = () => {
-        const skyColor = 0xB1E1FF;  // light blue
-        const groundColor = 0xB97A20;  // brownish orange
+        const skyColor = 0xB1E1FF;
+        const groundColor = 0xB97A20;
         const intensity = 0.3;
         let light = new THREE.HemisphereLight(skyColor, groundColor, intensity);
         this.scene.add(light);
@@ -104,12 +98,12 @@ class Scene extends Component {
             width: window.innerWidth,
             height: window.innerHeight
         }
+
         //Camera
         this.camera = new THREE.PerspectiveCamera(75, sizes.width / sizes.height, 0.1, 1000)
         this.camera.position.x = 50
         this.camera.position.y = 10
         this.camera.position.z = 0
-
         this.scene.add(this.camera)
 
         // Renderer
@@ -124,16 +118,13 @@ class Scene extends Component {
         this.initTestObject()
         this.addPlain()
 
-//-------------
         window.addEventListener('resize', () => {
             // Update sizes
             sizes.width = window.innerWidth
             sizes.height = window.innerHeight
-
             // Update camera
             this.camera.aspect = sizes.width / sizes.height
             this.camera.updateProjectionMatrix()
-
             // Update renderer
             this.renderer.setSize(sizes.width, sizes.height)
             this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))

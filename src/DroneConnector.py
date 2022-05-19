@@ -27,9 +27,7 @@ class DroneConnector(UAV):
     def _getPortOfFreeContainer():
         if len(DroneConnector.occupiedPorts) == 0:
             DroneConnector.occupiedPorts.append(DroneConnector.startPort)
-            # TODO: start container
             return str(DroneConnector.startPort)
         else:
             DroneConnector.occupiedPorts.append(DroneConnector.occupiedPorts[-1] + 1)
-            # TODO: start container
             return str(DroneConnector.occupiedPorts[-1])

@@ -25,5 +25,5 @@ class ConnectService:
 
         for drone in drones:
             lat, lon, alt = drone.getLLA()
-            drone.start_position.setXYZ(*ConvertService.geodetic2enu(lat, lon, alt, lat0, lon0, alt0))
+            drone.startPosition.setXYZ(*ConvertService.geodetic2enu(lat, lon, alt, lat0, lon0, alt0))
         return drones[0].getLLA()

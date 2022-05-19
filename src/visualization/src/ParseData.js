@@ -1,6 +1,6 @@
 import {Vector3} from "three"
 
-// 10.4 40 75.45879 1|47.45 78 100.0 0|...|78.7 56 789.2
+// data format: 10.4 40 75.45879 1|47.45 78 100.0 0|...|78.7 56 789.2
 function parseData(data){
     let positions = []
     for (let coordStr of data.split('|')){

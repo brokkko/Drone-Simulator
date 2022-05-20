@@ -16,9 +16,9 @@ class DronePhysics:
         self.approach: Final[float] = 0.2  # minimal approach of drones in one step
         self.targetAccuracy: Final[float] = 1
 
-    def findLocalK3(self, drone1: Drone, drone2: Drone):
+    def findLocalKopt(self, drone1: Drone, drone2: Drone):
         # checking for critical distance of drones
-        if drone1.position.distance_to(drone2.position) <= drone1.critical_radius:
+        if drone1.position.distance_to(drone2.position) <= drone1.criticalRadius:
             return self.k3
 
         distBefore = drone1.position.distance_to(drone2.position)
@@ -46,11 +46,11 @@ class DronePhysics:
 
         return k
 
-    def countK3(self, drone: Drone):
+    def countKopt(self, drone: Drone):
         values = []
         for neighbor in drone.neighbors:
             if drone.position.distance_to(neighbor.position) <= drone.safeRadius:
-                values.append(self.findLocalK3(drone, neighbor))
+                values.append(self.findLocalKopt(drone, neighbor))
         return max(values) if len(values) else 0
 
     def constructVelocityVector(self, drone: Drone) -> Vector:
@@ -63,7 +63,7 @@ class DronePhysics:
             drone.connected = 2  # status 2 means drone has reached his target
             return Vector()
 
-        k3 = self.countK3(drone) * self.k3
+        k3 = self.countKopt(drone) * self.k3
 
         V_goal: Vector = self.k1 * (drone.target - drone.position) / (drone.target - drone.position).length()
 

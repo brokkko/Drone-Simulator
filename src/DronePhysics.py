@@ -46,7 +46,7 @@ class DronePhysics:
 
         return k
 
-    def countKopt(self, drone: Drone):
+    def countKeff(self, drone: Drone):
         values = []
         for neighbor in drone.neighbors:
             if drone.position.distance_to(neighbor.position) <= drone.safeRadius:
@@ -63,8 +63,6 @@ class DronePhysics:
             drone.connected = 2  # status 2 means drone has reached his target
             return Vector()
 
-        k3 = self.countKopt(drone) * self.k3
-
         V_goal: Vector = self.k1 * (drone.target - drone.position) / (drone.target - drone.position).length()
 
         V_close: Vector = Vector()
@@ -74,7 +72,7 @@ class DronePhysics:
                 arg1: float = (neighbour.position - drone.position).length() / min(neighbour.position.length(),
                                                                                    drone.position.length())
                 arg_goal = (neighbour.position - drone.position) / (neighbour.position - drone.position).length()
-                r_dist = -k3 * ((2 - arg1) * (2 - arg1)) * arg_goal
+                r_dist = -self.k3 * self.countKeff(drone) * ((2 - arg1) * (2 - arg1)) * arg_goal
                 V_close += r_dist
                 r_sum += neighbour.position
 

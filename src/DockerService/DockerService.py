@@ -20,6 +20,7 @@ def runDocker(latlonList: List[tuple]) -> None:
         mount = {config['path'] + str(i): {'bind': '/usr/src/app/cache', 'mode': 'rw'}}  # host : container
         env = [f'LAT={latlon[0]}', f'LON={latlon[1]}']
         name = image + str(i)
+        print(f'created {i+1}/{len(latlon)}')
         client.containers.run(image, "./start.sh", ports=port, volumes=mount, environment=env, tty=True,
                               auto_remove=True, name=name, detach=True)
 

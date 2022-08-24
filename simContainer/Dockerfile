@@ -14,6 +14,9 @@ RUN apt-get install -y libxfixes-dev
 RUN apt-get install -y libxft2
 RUN su
 
+RUN apt install -y dos2unix
+RUN dos2unix start.sh
+
 
 RUN chmod +x Autopilot
 RUN chmod +x simulator-cli
